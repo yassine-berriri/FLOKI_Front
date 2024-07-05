@@ -1,0 +1,14 @@
+<div class="container">
+    <div class="btn-group" role="group" aria-label="User type">
+      <input type="radio" class="btn-check" name="userType" id="btnSender" autocomplete="off" (click)="selectUserType('sender')" [checked]="userType() === 'sender'" />
+      <label class="btn btn-outline-secondary" for="btnSender">Sender</label>
+      
+    
+      <input type="radio" class="btn-check" name="userType" id="btnTransporter" autocomplete="off" (click)="selectUserType('transporter')" [checked]="userType() === 'transporter'" />
+      <label class="btn btn-outline-secondary" for="btnTransporter">Transporter</label>
+    </div>
+  
+    <div class="body" *ngIf="userType() === 'sender'">Signup Sender</div>
+    <div class="body" *ngIf="userType() === 'transporter'">Signup Transporter</div>
+  </div>
+  

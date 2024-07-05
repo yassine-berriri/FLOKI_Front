@@ -1,0 +1,40 @@
+<mat-toolbar color="primary">
+    <button mat-icon-button (click)="sidenav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+ 
+    <span>Floki Express</span>
+    <span class="example-spacer"></span>
+    <div class="buttons">
+
+    <app-button-custom variant="raised" [routerLink]="['register']"  >
+      <span (click)="closeSideNav()">Join</span>
+    </app-button-custom>
+
+    <app-button-custom variant="raised" [routerLink]="['login']"  >
+      <span (click)="closeSideNav()"><a >Login</a></span>
+    </app-button-custom>
+
+  </div>
+  </mat-toolbar>
+  
+  <mat-sidenav-container class="example-container">
+    <mat-sidenav #sidenav mode="side" opened>
+      <mat-nav-list>
+        <mat-list-item  routerLink="sender">Ship</mat-list-item>
+        <mat-list-item routerLink="trnasporter">Find shipment</mat-list-item>
+        <mat-list-item routerLink="">Contact</mat-list-item>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+      <app-footer></app-footer>
+    </mat-sidenav-content>
+ 
+  </mat-sidenav-container>
+
+ 
+
+
+
+  

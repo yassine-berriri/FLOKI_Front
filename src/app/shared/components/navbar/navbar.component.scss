@@ -1,0 +1,34 @@
+@import '../../../shared/scss/variables';
+.example-container {
+    height: 100%;
+  }
+  
+  mat-toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background:$theme-color2 ;
+  }
+  
+  mat-sidenav-container {
+    margin-top: 64px; /* La hauteur de la toolbar */
+    
+  }
+  
+  mat-sidenav {
+    width: 8%;
+    background:$theme-color2 ;
+  }
+  
+
+
+  .example-spacer {
+    flex: 1 1 auto;
+  }
+
+  .buttons{
+    display: flex;
+    gap: 5%;
+    
+  }

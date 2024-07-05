@@ -1,1 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* basic elements */
+
+
+//@import 'app/shared/scss/theme-elements/authentication.scss';
+
+/* fonts-icon */
+@import 'app/shared/scss/variables';
+@import 'app/shared/scss/fonts/fontawesome/scss/fontawesome';
+@import 'app/shared/scss/fonts/feather/iconfont';
+
+@import 'app/shared/scss/_general';
+@import 'app/shared/scss/_generic';
+@import 'app/shared/scss/mixins/function';
+
+/* important element */
+@import 'app/shared/scss/menu/menu-lite';
+
+/* basic elements */
+@import 'app/shared/scss/theme-elements/theme-elements';
+
+/* third party modules style*/
+@import 'app/shared/scss/plugins/_plugins';
+
+@import 'app/shared/scss/_custom';

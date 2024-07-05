@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthService {
-  private userRole: 'visitor' | 'transporter' | 'sender' = 'visitor';
+  private userRole: 'visitor' | 'transporter' | 'sender'  = 'visitor';
 
   constructor() {}
 

@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { SharedModule } from './shared/shared.module';
 import { VisitorComponent } from './core/spaces/spaces.module';
+import { NavbarComponent } from './shared/components/navbar/navbar.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [SharedModule, NgClass, RouterOutlet, VisitorComponent],
+  imports: [SharedModule, NgClass, RouterOutlet, VisitorComponent, NavbarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
