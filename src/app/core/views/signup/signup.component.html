@@ -8,7 +8,55 @@
       <label class="btn btn-outline-secondary" for="btnTransporter">Transporter</label>
     </div>
   
-    <div class="body" *ngIf="userType() === 'sender'">Signup Sender</div>
-    <div class="body" *ngIf="userType() === 'transporter'">Signup Transporter</div>
+    <div class="body" *ngIf="userType() === 'sender'">
+
+      <div class="auth-wrapper">
+    <div class="auth-content">
+      <div class="auth-bg">
+        <span class="r"></span>
+        <span class="r s"></span>
+        <span class="r s"></span>
+        <span class="r"></span>
+      </div>
+      <div class="card">
+        <div class="card-body text-center">
+          <div class="mb-6">
+            <i class="feather icon-unlock auth-icon"></i>
+          </div>
+          <h3 class="mb-4">SignUp</h3>
+
+          <div class="input-group mb-4 d-flex justify-content-between">
+            <input type="text" class="form-control me-2" placeholder="FirstName" />
+            <input type="text" class="form-control ms-2" placeholder="LastName" />
+        </div>
+
+          <div class="input-group mb-4">
+            <input type="email" class="form-control" placeholder="Email" />
+          </div>
+          <div class="input-group mb-4 d-flex justify-content-between">
+            <input type="password" class="form-control me-2" placeholder="Create password" />
+            <input type="tel" class="form-control ms-2" placeholder="Phone number" />
+        </div>
+
+          
+
+          <div class="form-group text-start mb-4">
+            <div class="checkbox checkbox-fill d-inline">
+              <input type="checkbox" name="checkbox-fill-1" id="checkbox-fill-a1" checked="" />
+              <label for="checkbox-fill-a1" class="cr">I accept conditions</label>
+            </div>
+          </div>
+          <button type="button" class="btn btn-outline-primary">Join Us</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    </div>
+    <div class="body" *ngIf="userType() === 'transporter'">
+      
+      
+
+    </div>
   </div>
   
