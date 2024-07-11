@@ -1,123 +1,120 @@
 <div class="container">
-    <div class="btn-group" role="group" aria-label="User type">
-      <input type="radio" class="btn-check" name="userType" id="btnSender" autocomplete="off" (click)="selectUserType('sender')" [checked]="userType() === 'sender'" />
-      <label class="btn btn-outline-secondary" for="btnSender">Sender</label>
-      
-    
-      <input type="radio" class="btn-check" name="userType" id="btnTransporter" autocomplete="off" (click)="selectUserType('transporter')" [checked]="userType() === 'transporter'" />
-      <label class="btn btn-outline-secondary" for="btnTransporter">Transporter</label>
-    </div>
-  
-    <div class="body" *ngIf="userType() === 'sender'">
+  <div class="btn-group" role="group" aria-label="User type">
+    <input
+      type="radio"
+      class="btn-check"
+      name="userType"
+      id="btnSender"
+      autocomplete="off"
+      (click)="selectUserType('sender')"
+      [checked]="userType() === 'sender'"
+    />
+    <label class="btn btn-outline-secondary" for="btnSender">Sender</label>
 
-      <div class="auth-wrapper">
-    <div class="auth-content">
-      <div class="auth-bg">
-        <span class="r"></span>
-        <span class="r s"></span>
-        <span class="r s"></span>
-        <span class="r"></span>
-      </div>
-      <div class="card">
-        <div class="card-body text-center">
-          <div class="mb-6">
-            <i class="feather icon-unlock auth-icon"></i>
-          </div>
-          <h3 class="mb-4">SignUp</h3>
+    <input
+      type="radio"
+      class="btn-check"
+      name="userType"
+      id="btnTransporter"
+      autocomplete="off"
+      (click)="selectUserType('transporter')"
+      [checked]="userType() === 'transporter'"
+    />
+    <label class="btn btn-outline-secondary" for="btnTransporter">Transporter</label>
+  </div>
 
-          <div class="input-group mb-4 d-flex justify-content-between">
-            <input type="text" class="form-control me-2" placeholder="FirstName" />
-            <input type="text" class="form-control ms-2" placeholder="LastName" />
+  <div class="body" *ngIf="userType() === 'sender'">
+    <!-- Formulaire Sender -->
+    <div class="auth-wrapper">
+      <div class="auth-content">
+        <div class="auth-bg">
+          <span class="r"></span>
+          <span class="r s"></span>
+          <span class="r s"></span>
+          <span class="r"></span>
         </div>
-
-          <div class="input-group mb-4">
-            <input type="email" class="form-control" placeholder="Email" />
-          </div>
-          <div class="input-group mb-4 d-flex justify-content-between">
-            <input type="password" class="form-control me-2" placeholder="Create password" />
-            <input type="tel" class="form-control ms-2" placeholder="Phone number" />
-        </div>
-
-          
-
-          <div class="form-group text-start mb-4">
-            <div class="checkbox checkbox-fill d-inline">
-              <input type="checkbox" name="checkbox-fill-1" id="checkbox-fill-a1" checked="" />
-              <label for="checkbox-fill-a1" class="cr">I accept conditions</label>
+        <div class="card">
+          <div class="card-body text-center">
+            <div class="mb-6">
+              <i class="feather icon-unlock auth-icon"></i>
             </div>
+            <h3 class="mb-4">SignUp</h3>
+            <div class="input-group mb-4 d-flex justify-content-between">
+              <input type="text" class="form-control me-2" placeholder="FirstName" />
+              <input type="text" class="form-control ms-2" placeholder="LastName" />
+            </div>
+            <div class="input-group mb-4">
+              <input type="email" class="form-control" placeholder="Email" />
+            </div>
+            <div class="input-group mb-4 d-flex justify-content-between">
+              <input type="password" class="form-control me-2" placeholder="Create password" />
+              <input type="tel" class="form-control ms-2" placeholder="Phone number" />
+            </div>
+            <div class="form-group text-start mb-4">
+              <div class="checkbox checkbox-fill d-inline">
+                <input type="checkbox" name="checkbox-fill-1" id="checkbox-fill-a1" checked="" />
+                <label for="checkbox-fill-a1" class="cr">I accept conditions</label>
+              </div>
+            </div>
+            <button type="button" class="btn btn-outline-primary">Join Us</button>
           </div>
-          <button type="button" class="btn btn-outline-primary">Join Us</button>
         </div>
       </div>
     </div>
   </div>
 
-    </div>
-    <div class="body" *ngIf="userType() === 'transporter'">
-      <mat-stepper [linear]="isLinear" #stepper>
-        <mat-step [stepControl]="firstFormGroup">
-          <form [formGroup]="firstFormGroup">
-            <ng-template matStepLabel>Fill out your name</ng-template>
-            <mat-form-field>
-              <mat-label>Name</mat-label>
-              <input
-                matInput
-                placeholder="Last name, First name"
-                formControlName="firstCtrl"
-                required
-              />
+  <div class="body_transporter" *ngIf="userType() === 'transporter'">
+    <mat-stepper [linear]="isLinear" #stepper>
+      <mat-step [stepControl]="firstFormGroup">
+        <form [formGroup]="firstFormGroup">
+          <ng-template matStepLabel>Contact information</ng-template>
+          <mat-form-field class="col-md-5">
+            <mat-label>firsName</mat-label>
+            <input matInput formControlName="firstCtrl" placeholder="firsName" required />
+          </mat-form-field>
+          <mat-form-field  class="col-md-5">
+            <mat-label>lastName</mat-label>
+            <input matInput formControlName="firstCtrl" placeholder="lastName" required />
+          </mat-form-field>
+          <br/>
+          <mat-form-field class="col-md-5">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="firstCtrl" type="email" placeholder="Email" required />
+          </mat-form-field>
+          <mat-form-field class="col-md-5">
+            <mat-label>Phone number</mat-label>
+            <input matInput formControlName="firstCtrl" type="tel" placeholder="Phone" required />
+          </mat-form-field>
 
-
-            </mat-form-field>
-            <div>
-              <button mat-button matStepperNext>Next</button>
-            </div>
-          </form>
-        </mat-step>
-        <!-- #docregion label -->
-        <mat-step [stepControl]="secondFormGroup" label="Fill out your address">
-          <!-- #enddocregion label -->
-          <form [formGroup]="secondFormGroup">
-            <mat-form-field>
-              <mat-label>Prénom</mat-label>
-              <input
-                matInput
-                formControlName="secondCtrl"
-                placeholder="Prénom"
-                required
-              />  
-            </mat-form-field>
-
-            <mat-form-field>
+          <div>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="secondFormGroup" label="Fill out your address">
+        <form [formGroup]="secondFormGroup">
+          <mat-form-field>
+            <mat-label>Address</mat-label>
+            <input matInput formControlName="secondCtrl" placeholder="Address" required />
+          </mat-form-field>
+          <mat-form-field>
             <mat-label>Nom</mat-label>
-            <input
-              matInput
-              formControlName="secondCtrl"
-              placeholder="Nom"
-              required
-            />
-            </mat-form-field>
-
-            
-
-
-            <div>
-              <button mat-button matStepperPrevious>Back</button>
-              <button mat-button matStepperNext>Next</button>
-            </div>
-          </form>
-        </mat-step>
-      
-        <mat-step>
-          <ng-template matStepLabel>Done</ng-template>
-          <p>You are now done.</p>
+            <input matInput formControlName="secondCtrl" placeholder="Nom" required />
+          </mat-form-field>
           <div>
             <button mat-button matStepperPrevious>Back</button>
-            <button mat-button (click)="stepper.reset()">Reset</button>
+            <button mat-button matStepperNext>Next</button>
           </div>
-        </mat-step>
-      </mat-stepper>
-
-    </div>
+        </form>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Done</ng-template>
+        <p>You are now done.</p>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button (click)="stepper.reset()">Reset</button>
+        </div>
+      </mat-step>
+    </mat-stepper>
   </div>
-  
+</div>

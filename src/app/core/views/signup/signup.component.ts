@@ -6,6 +6,7 @@ import {MatStepperModule} from '@angular/material/stepper';
 import {MatButtonModule} from '@angular/material/button';
 import {FormBuilder, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 
+
 @Component({
   selector: 'app-signup',
   standalone: true,
@@ -26,13 +27,15 @@ export class SignupComponent {
   firstFormGroup = this._formBuilder.group({
     firstCtrl: ['', Validators.required],
   });
+
   secondFormGroup = this._formBuilder.group({
     secondCtrl: ['', Validators.required],
   });
+
   isLinear = false;
 
   constructor(private _formBuilder: FormBuilder) {}
-  
+
   selectUserType(userType: string) {
     this.userType.set(userType);
   }
