@@ -4,7 +4,9 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatButtonModule} from '@angular/material/button';
-import {FormBuilder, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormBuilder, Validators} from '@angular/forms';
+import { PhoneNumberInputComponent } from '../../../shared/components/inputs/phone-number-input/phone-number-input.component';
+import { CountrySelectComponent } from '../../../shared/components/inputs/country-select/country-select.component';
 
 
 @Component({
@@ -13,10 +15,10 @@ import {FormBuilder, Validators, FormsModule, ReactiveFormsModule} from '@angula
   imports: [SharedModule,
     MatButtonModule,
     MatStepperModule,
-    FormsModule,
-    ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
+    PhoneNumberInputComponent,
+    CountrySelectComponent
   ],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'
