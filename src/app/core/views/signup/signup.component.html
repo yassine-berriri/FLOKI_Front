@@ -41,21 +41,22 @@
             </div>
             <h3 class="mb-4" >SignUp</h3>
           </div>
+          <form [formGroup]="senderForm" (ngSubmit)="signup()">
             <div class="input-group mb-4 d-flex justify-content-between">
-              <input type="text" class="form-control me-2" placeholder="FirstName" />
-              <input type="text" class="form-control ms-2" placeholder="LastName" />
+              <input type="text" class="form-control me-2" formControlName="firstName" placeholder="FirstName" />
+              <input type="text" class="form-control ms-2" formControlName="lastName"  placeholder="LastName" />
             </div>
             <div class="input-group mb-4">
-              <input type="email" class="form-control" placeholder="Email" />
+              <input type="email" class="form-control"  formControlName="email" placeholder="Email" />
             </div>
             <div class="input-group mb-4 d-flex justify-content-between">
-              <input type="password" class="form-control me-2" placeholder="Create password" />
-              <input type="password" class="form-control me-2" placeholder="Confirm password" />
+              <input type="password" class="form-control me-2" formControlName="password" placeholder="Create password" />
+              <input type="password" class="form-control me-2" formControlName="confirmPassword" placeholder="Confirm password" />
               
             </div>
 
             
-              <app-phone-number-input></app-phone-number-input>
+           <!--  <app-phone-number-input></app-phone-number-input> --> 
             
             <div class="form-group text-start mb-4">
               <div class="checkbox checkbox-fill d-inline">
@@ -64,8 +65,9 @@
               </div>
             </div>
             <div class="text-center">
-            <button type="button" class="btn btn-outline-primary">Join Us</button>
+            <button type="submit" class="btn btn-outline-primary"    [disabled]="senderForm.invalid">Join Us</button>
             </div>
+          </form>
           </div>
         </div>
       </div>

@@ -10,10 +10,14 @@ import { ButtonCustomComponent } from './components/button-custom/button-custom.
 import { RouterModule } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
+
 import { provideHttpClient } from '@angular/common/http';
 import {FormBuilder, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { CountryService } from './services/country.service';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { authReducer } from './store/reducers/auth.reducers';
+
 // Importez ici d'autres modules que vous voulez partager
 
 @NgModule({
@@ -26,9 +30,9 @@ import { CountryService } from './services/country.service';
     MatSidenavModule,
     MatListModule, 
     RouterModule,
-    NgxIntlTelInputModule,
     FormsModule,
     ReactiveFormsModule,
+   // StoreModule.forRoot({ auth: authReducer})
   ],
   exports: [
     CommonModule,
@@ -40,7 +44,7 @@ import { CountryService } from './services/country.service';
     MatListModule,
     RouterModule,
     ReactiveFormsModule,
-    NgxIntlTelInputModule
+    
   ],
   providers: [provideHttpClient(), CountryService]
 })
