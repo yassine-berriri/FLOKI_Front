@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormControl, AbstractControl } from '@angular/forms';
 import { CountryService } from '../../../services/country.service';
 import { SharedModule } from '../../../shared.module';
 
@@ -12,14 +12,12 @@ import { SharedModule } from '../../../shared.module';
   styleUrls: ['./country-select.component.scss']
 })
 export class CountrySelectComponent implements OnInit {
-  countries: any[] = [];
-  form: FormGroup;
+  @Input() selectedCountry: string = '';
+  @Output() countryChange = new EventEmitter<string>(); // Événement de changement de valeur
 
-  constructor(private fb: FormBuilder, private countryService: CountryService) {
-    this.form = this.fb.group({
-      country: ['', Validators.required]
-    });
-  }
+  countries: any[] = [];
+
+  constructor(private countryService: CountryService) {}
 
   ngOnInit(): void {
     this.countryService.getCountries().subscribe((data: any) => {
@@ -27,9 +25,9 @@ export class CountrySelectComponent implements OnInit {
     });
   }
 
-  onSubmit() {
-    if (this.form.valid) {
-      console.log(this.form.value);
-    }
+  onCountryChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    this.selectedCountry = selectElement.value;
+    this.countryChange.emit(this.selectedCountry); // Émettre l'événement
   }
 }

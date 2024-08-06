@@ -75,103 +75,110 @@
   </div>
 
   <div class="body_transporter" *ngIf="userType() === 'transporter'">
-    <mat-stepper [linear]="isLinear" #stepper>
-      <mat-step [stepControl]="firstFormGroup">
-        <form [formGroup]="firstFormGroup">
-          <ng-template matStepLabel>Contact information</ng-template>
-          <div class="row">
-          <div class="col-md-5">
-          <label for="text">FirstName</label>
-              <input type="text" class="form-control" placeholder="Please enter your firstName" />
-          </div>
-          <div class="col-md-5">
-            <label for="text">LastName</label>
-                <input type="text" class="form-control" placeholder="Please enter your lastName" />
+    
+      <mat-stepper [linear]="isLinear" #stepper>
+        <mat-step [stepControl]="transporterFormStepOne">
+          <form [formGroup]="transporterFormStepOne" (ngSubmit)="signup()">
+            <ng-template matStepLabel>Contact information</ng-template>
+            <div class="row">
+            <div class="col-md-5">
+            <label for="text">FirstName</label>
+                <input type="text" formControlName="firstName" class="form-control" placeholder="Please enter your firstName" />
+            </div>
+            <div class="col-md-5">
+              <label for="text">LastName</label>
+                  <input type="text" formControlName="lastName" class="form-control" placeholder="Please enter your lastName" />
+              </div>
+            </div>
+            <br/>
+
+            <div class="row">
+  
+          
+            <div class="col-md-5">
+              <label for="exampleInputEmail1">Email address</label>
+              <input type="email"  formControlName="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
+              <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+   
+            <div class="col-md-5">
+            <!--  <app-phone-number-input></app-phone-number-input> -->
             </div>
           </div>
-          <br/>
-          <div class="row">
-
+  
+            <div>
+  
+              <button mat-button matStepperNext type="submit">Next</button>
+            </div>
+          </form>
+        </mat-step>
+        <mat-step [stepControl]="transporterFormStepTwo" label="Fill out your address">
+          <form [formGroup]="transporterFormStepTwo" (ngSubmit)="signup()">
+            <div class="form-group">
+              <label for="inputAddress">Address</label>
+              <input type="text" formControlName="address" class="form-control" id="inputAddress" placeholder="1234 Main St" />
+            </div>
+  
+            <div class="row">
+            <div class="form-group col-md-6">
+              <label for="inputCity">City</label>
+              <input type="text" formControlName="city" class="form-control" id="inputCity" />
+            </div>
             
-          <div class="col-md-5">
-            <label for="exampleInputEmail1">Email address</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
-            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            <div class="form-group col-md-4">
+             <app-country-select [selectedCountry]="transporterFormStepTwo.get('country')?.value" (countryChange)="onCountryChange($event)"></app-country-select> 
+            </div>
+  
+            <div class="form-group col-md-2">
+              <label for="inputZip">Zip Code</label>
+              <input type="text" formControlName="zipCode"  form class="form-control" id="inputZip" />
+            </div>
+  
           </div>
- 
-          <div class="col-md-5">
-            <app-phone-number-input></app-phone-number-input>
-          </div>
-        </div>
-
-          <div>
-
-            <button mat-button matStepperNext>Next</button>
-          </div>
-        </form>
-      </mat-step>
-      <mat-step [stepControl]="secondFormGroup" label="Fill out your address">
-        <form [formGroup]="secondFormGroup">
-          <div class="form-group">
-            <label for="inputAddress">Address</label>
-            <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" />
-          </div>
-
+       
+  
+            <div>
+              <button mat-button matStepperPrevious>Back</button>
+              <button mat-button matStepperNext type="submit">Next</button>
+            </div>
+          </form>
+        </mat-step>
+        <mat-step [stepControl]="transporterFormStepThree" label="Fill out your address">
+          <form [formGroup]="transporterFormStepThree">
+          <ng-template matStepLabel>Compte Floki</ng-template>
           <div class="row">
-          <div class="form-group col-md-6">
-            <label for="inputCity">City</label>
-            <input type="text" class="form-control" id="inputCity" />
+          <div class="col-md-5">
+          <div class="input-group">
+            <span class="input-group-text" id="validationTooltipUsernamePrepend">&#64;</span>
+            <input
+              forlControlName="username"
+              type="text"
+              class="form-control"
+              id="validationTooltipUsername"
+              placeholder="Username"
+              aria-describedby="validationTooltipUsernamePrepend"
+              required
+            />
+            <div class="invalid-feedback">Please choose a username.</div>
           </div>
-          
-          <div class="form-group col-md-4">
-            <app-country-select></app-country-select>
           </div>
-
-          <div class="form-group col-md-2">
-            <label for="inputZip">Zip Code</label>
-            <input type="text" class="form-control" id="inputZip" />
+  
+          <div class="col-md-5">
+            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" />
+            <br>
+            <input type="password" forlControlName="password" class="form-control" id="exampleInputPassword2" placeholder="Please cofirm your password" />
           </div>
-
+  
         </div>
-     
-
+        <br>
           <div>
             <button mat-button matStepperPrevious>Back</button>
-            <button mat-button matStepperNext>Next</button>
+            <button mat-button (click)="stepper.reset()">Rejoindre Floky</button>
           </div>
-        </form>
-      </mat-step>
-      <mat-step>
-        <ng-template matStepLabel>Compte Floki</ng-template>
-        <div class="row">
-        <div class="col-md-5">
-        <div class="input-group">
-          <span class="input-group-text" id="validationTooltipUsernamePrepend">&#64;</span>
-          <input
-            type="text"
-            class="form-control"
-            id="validationTooltipUsername"
-            placeholder="Username"
-            aria-describedby="validationTooltipUsernamePrepend"
-            required
-          />
-          <div class="invalid-feedback">Please choose a username.</div>
-        </div>
-        </div>
+          </form>
+        </mat-step>
+      </mat-stepper>
 
-        <div class="col-md-5">
-          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" />
-          <br>
-          <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Please cofirm your password" />
-        </div>
-
-      </div>
-      <br>
-        <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button (click)="stepper.reset()">Rejoindre Floky</button>
-        </div>
-      </mat-step>
-    </mat-stepper>
+  
   </div>
 </div>

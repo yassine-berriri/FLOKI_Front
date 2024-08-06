@@ -1,14 +1,8 @@
-    <div >
-      <label for="inputState">Country</label>
-      <select id="inputState" class="form-control" formControlName="country">
-        
-        <option *ngFor="let country of countries" [value]="country.name.common">
-            <img [src]="country.flags.png" alt="{{ country.name.common }}" width="20" height="15"> {{ country.name.common }}
-          </option>
-    
-       </select>
-     
-    </div>
-
-
-  
+<div>
+  <label for="inputState">Country</label>
+  <select id="inputState" class="form-control" [value]="selectedCountry" (change)="onCountryChange($event)">
+    <option *ngFor="let country of countries" [value]="country.name.common">
+      <img [src]="country.flags.png" alt="{{ country.name.common }}" width="20" height="15"> {{ country.name.common }}
+    </option>
+  </select>
+</div>

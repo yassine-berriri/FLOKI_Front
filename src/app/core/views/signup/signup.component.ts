@@ -11,8 +11,9 @@ import { Store } from '@ngrx/store';
 import { Sender } from '../../../shared/store/models/Sender';
 import { signupSender, signupTransporter } from '../../../shared/store/actions/auth.actions';
 import { Console } from 'console';
-import { selectSender } from '../../../shared/store/selectors/auth.selectors';
+import { selectSender, selectTransporter } from '../../../shared/store/selectors/auth.selectors';
 import { Observable } from 'rxjs';
+import { Transporter } from '../../../shared/store/models/Transporter';
 
 @Component({
   selector: 'app-signup',
@@ -31,9 +32,13 @@ import { Observable } from 'rxjs';
 export class SignupComponent {
   userType = signal<string | null>('sender');
   senderForm: FormGroup;
- // transporterForm: FormGroup;
+  transporterFormStepOne: FormGroup;
+  transporterFormStepTwo: FormGroup;
+  transporterFormStepThree: FormGroup;
+  transporter: Transporter = new Transporter();
+
  //    sender$: Observable<Sender | null>;
-  constructor(private fb: FormBuilder, private store: Store){
+  constructor(private fb: FormBuilder, private store: Store) {
     console.log("chui dans constructeur");
     this.senderForm = this.fb.group({
       firstName: ['', Validators.required],
@@ -43,14 +48,39 @@ export class SignupComponent {
       confirmPassword: ['', Validators.required],
       //phoneNumber: ['', Validators.required]
     });
+
+    this.transporterFormStepOne = this.fb.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+    });
+
+    this.transporterFormStepTwo = this.fb.group({
+      address: ['', Validators.required],
+      city: ['', Validators.required],
+      country: ['', Validators.required],
+      zipCode: ['', Validators.required]
+    });
+
+    this.transporterFormStepThree = this.fb.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required]
+    });
+
+
+  ///  console.log("chui dans constructeur firstName = ", this.transporterFormGroup1!.value.firstName);
    // this.authError$ = this.store.select(selectAuthError);
-  // this.sender$ = this.store.select(selectSender);
+     console.log("transporter = ",this.store.select(selectTransporter));
   // console.log("constructeur this.sender$ = ", this.sender$);
   }
+
+
+  onCountryChange(selectedCountry: string): void {
+    this.transporterFormStepTwo.patchValue({ country: selectedCountry });
+  }
   
-  firstFormGroup = this.fb.group({
-    firstCtrl: ['', Validators.required],
-  });
+  
+
 
   secondFormGroup = this.fb.group({
     secondCtrl: ['', Validators.required],
@@ -64,7 +94,7 @@ export class SignupComponent {
     console.log()
     this.userType.set(userType);
   }
- 
+
 
   signup() {
     console.log("userType = ", this.userType());
@@ -84,12 +114,14 @@ export class SignupComponent {
        
       }
     } else {
-      /*
-      if (this.transporterForm.valid) {
-        const transporter = new Transporter(
-          this.transporterForm.value.firstName,
-          this.transporterForm.value.lastName,
-          this.transporterForm.value.email,
+      
+      if (this.transporterFormStepOne.valid) {
+        this.transporter.firstName = this.transporterFormStepOne.value.firstName,
+        this.transporter.lastName = this.transporterFormStepOne.value.lastName,
+        this.transporter.email = this.transporterFormStepOne.value.email
+        
+          
+         /* this.transporterForm.value.email,
           this.transporterForm.value.phoneNumber,
           this.transporterForm.value.address,
           this.transporterForm.value.city,
@@ -97,11 +129,28 @@ export class SignupComponent {
           this.transporterForm.value.zipCode,
           this.transporterForm.value.username,
           this.transporterForm.value.password
-        );
+          */
+        
+       
 
-        this.store.dispatch(signupTransporter({ transporter }));
+      //  this.store.dispatch(signupTransporter({  transporter }));
       }
-        */
+
+      if (this.transporterFormStepTwo.valid) {
+        this.transporter.address = this.transporterFormStepTwo.value.address || '';
+        this.transporter.city = this.transporterFormStepTwo.value.city || '';
+        this.transporter.country = this.transporterFormStepTwo.value.country || '';
+        this.transporter.zipCode = this.transporterFormStepTwo.value.zipCode || '';
+      }
+
+      if (this.transporterFormStepThree.valid) {
+        this.transporter.username = this.transporterFormStepThree.value.username || '';
+        this.transporter.password = this.transporterFormStepThree.value.password || '';
+        this.store.dispatch(signupTransporter({ transporter: this.transporter }));
+      }
+
+      console.log("trnasporter = ", this.transporter);
+        
     }
   }
 
