@@ -7,7 +7,27 @@ export const signupSender = createAction(
   props<{ sender: Sender }>()
 );
 
+export const signupSenderSuccess = createAction(
+  '[Auth] Signup Sender Success',
+  props<{ sender: Sender }>()
+);
+
+export const signupSenderFailure = createAction(
+  '[Auth] Signup Sender Failure',
+  props<{ error: any }>()
+);
+
 export const signupTransporter = createAction(
   '[Auth] Signup Transporter',
   props<{ transporter: Transporter }>()
+);
+
+export const signupTransporterSuccess = createAction(
+  '[Auth] Signup Transporter Success',
+  props<{ transporter: Transporter }>()
+);
+
+export const signupTransporterFailure = createAction(
+  '[Auth] Signup Transporter Failure',
+  props<{ error: any }>()
 );

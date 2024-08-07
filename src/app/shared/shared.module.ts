@@ -17,6 +17,9 @@ import { CountryService } from './services/country.service';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { authReducer } from './store/reducers/auth.reducers';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { EffectsModule } from '@ngrx/effects';
+import { AuthEffects } from './store/effects/AuthEffects';
 
 // Importez ici d'autres modules que vous voulez partager
 
@@ -32,7 +35,8 @@ import { authReducer } from './store/reducers/auth.reducers';
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-   // StoreModule.forRoot({ auth: authReducer})
+    NgbModalModule,
+    
   ],
   exports: [
     CommonModule,

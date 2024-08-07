@@ -13,9 +13,9 @@ export const selectTransporter = createSelector(
   (state: AuthState) => state.transporter
 );
 
-/*
+
 export const selectAuthError = createSelector(
   selectAuthState,
-  (state: AuthState) => state.error
+  (state: AuthState) => state.error!
 );
-*/
+

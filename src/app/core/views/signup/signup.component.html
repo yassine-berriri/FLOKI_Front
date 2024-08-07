@@ -144,14 +144,14 @@
           </form>
         </mat-step>
         <mat-step [stepControl]="transporterFormStepThree" label="Fill out your address">
-          <form [formGroup]="transporterFormStepThree">
+          <form [formGroup]="transporterFormStepThree" (ngSubmit)="signup()">
           <ng-template matStepLabel>Compte Floki</ng-template>
           <div class="row">
           <div class="col-md-5">
           <div class="input-group">
             <span class="input-group-text" id="validationTooltipUsernamePrepend">&#64;</span>
             <input
-              forlControlName="username"
+            formControlName="username"
               type="text"
               class="form-control"
               id="validationTooltipUsername"
@@ -166,14 +166,14 @@
           <div class="col-md-5">
             <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" />
             <br>
-            <input type="password" forlControlName="password" class="form-control" id="exampleInputPassword2" placeholder="Please cofirm your password" />
+            <input type="password" formControlName="password" class="form-control" id="exampleInputPassword2" placeholder="Please cofirm your password" />
           </div>
   
         </div>
         <br>
           <div>
             <button mat-button matStepperPrevious>Back</button>
-            <button mat-button (click)="stepper.reset()">Rejoindre Floky</button>
+            <button mat-button type="submit">Rejoindre Floky</button>
           </div>
           </form>
         </mat-step>

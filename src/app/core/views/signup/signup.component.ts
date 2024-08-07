@@ -7,13 +7,18 @@ import {MatButtonModule} from '@angular/material/button';
 import {Form, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { PhoneNumberInputComponent } from '../../../shared/components/inputs/phone-number-input/phone-number-input.component';
 import { CountrySelectComponent } from '../../../shared/components/inputs/country-select/country-select.component';
-import { Store } from '@ngrx/store';
+import { select, Store, StoreModule } from '@ngrx/store';
 import { Sender } from '../../../shared/store/models/Sender';
 import { signupSender, signupTransporter } from '../../../shared/store/actions/auth.actions';
 import { Console } from 'console';
-import { selectSender, selectTransporter } from '../../../shared/store/selectors/auth.selectors';
+import { selectAuthError, selectSender, selectTransporter } from '../../../shared/store/selectors/auth.selectors';
+import { selectAuthState } from '../../../shared/store/selectors/auth.selectors';
+
 import { Observable } from 'rxjs';
 import { Transporter } from '../../../shared/store/models/Transporter';
+import { ConfirmationPopupComponentComponent } from '../../../shared/components/popups/confirmation-popup.component/confirmation-popup.component.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -24,8 +29,11 @@ import { Transporter } from '../../../shared/store/models/Transporter';
     MatFormFieldModule,
     MatInputModule,
     PhoneNumberInputComponent,
-    CountrySelectComponent
+    CountrySelectComponent,
+    ConfirmationPopupComponentComponent,
+    
   ],
+ 
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'
 })
@@ -36,9 +44,12 @@ export class SignupComponent {
   transporterFormStepTwo: FormGroup;
   transporterFormStepThree: FormGroup;
   transporter: Transporter = new Transporter();
+  error$: Observable<string | null>;
 
  //    sender$: Observable<Sender | null>;
-  constructor(private fb: FormBuilder, private store: Store) {
+  constructor(private fb: FormBuilder, private store: Store, private modalService: NgbModal,
+    private router: Router,
+  ) {
     console.log("chui dans constructeur");
     this.senderForm = this.fb.group({
       firstName: ['', Validators.required],
@@ -46,6 +57,7 @@ export class SignupComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
+
       //phoneNumber: ['', Validators.required]
     });
 
@@ -67,6 +79,7 @@ export class SignupComponent {
       password: ['', Validators.required]
     });
 
+    this.error$ = this.store.pipe(select(selectAuthError));
 
   ///  console.log("chui dans constructeur firstName = ", this.transporterFormGroup1!.value.firstName);
    // this.authError$ = this.store.select(selectAuthError);
@@ -109,7 +122,7 @@ export class SignupComponent {
           this.senderForm.value.phoneNumber
         );
         console.log("sender = ", sender);
-        this.store.dispatch(signupSender({ sender }));
+        this.onSignupSender(sender)
 
        
       }
@@ -146,12 +159,56 @@ export class SignupComponent {
       if (this.transporterFormStepThree.valid) {
         this.transporter.username = this.transporterFormStepThree.value.username || '';
         this.transporter.password = this.transporterFormStepThree.value.password || '';
-        this.store.dispatch(signupTransporter({ transporter: this.transporter }));
+        //this.store.dispatch(signupTransporter({ transporter: this.transporter }));
+        console.log("trnasporter = ", this.transporter);
+        this.openModal();
       }
 
-      console.log("trnasporter = ", this.transporter);
+    
         
     }
+  }
+
+
+  onSignupSender(sender: Sender) {
+    this.store.dispatch(signupSender({ sender }));
+  }
+
+  onSignupTransporter(transporter: Transporter) {
+    this.store.dispatch(signupTransporter({ transporter }));
+  }
+
+  openModal() {
+    const modalRef = this.modalService.open(ConfirmationPopupComponentComponent);
+    modalRef.componentInstance.title = 'Enter Verification Code';
+    modalRef.componentInstance.body = 'Please enter the code you received by email:';
+    modalRef.componentInstance.footerButtons = [
+      { text: 'Close', action: () => modalRef.close() }
+    ];
+
+    modalRef.componentInstance.codeSubmitted.subscribe((code: string) => {
+      console.log('Code submitted:', code);
+      this.onSignupTransporter(this.transporter);
+      this.router.navigate(['/login']); 
+      // You can handle the submitted code here, e.g., send it to a server or store it
+    });
+  }
+
+  handleError() {
+    this.error$.subscribe(error => {
+      if (error) {
+        const modalRef = this.modalService.open(ConfirmationPopupComponentComponent);
+        modalRef.componentInstance.title = 'Error';
+        modalRef.componentInstance.body = error;
+        modalRef.componentInstance.footerButtons = [
+          { text: 'Close', action: () => modalRef.close() }
+        ];
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.handleError();
   }
 
 }
