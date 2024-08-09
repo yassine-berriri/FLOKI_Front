@@ -20,6 +20,8 @@ import { authReducer } from './store/reducers/auth.reducers';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './store/effects/AuthEffects';
+import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+
 
 // Importez ici d'autres modules que vous voulez partager
 
@@ -36,7 +38,7 @@ import { AuthEffects } from './store/effects/AuthEffects';
     FormsModule,
     ReactiveFormsModule,
     NgbModalModule,
-    
+    MatMomentDateModule
   ],
   exports: [
     CommonModule,
@@ -48,8 +50,8 @@ import { AuthEffects } from './store/effects/AuthEffects';
     MatListModule,
     RouterModule,
     ReactiveFormsModule,
-    
+    MatMomentDateModule
   ],
-  providers: [provideHttpClient(), CountryService]
+  providers: [provideHttpClient(), CountryService,  { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } }]
 })
 export class SharedModule { }

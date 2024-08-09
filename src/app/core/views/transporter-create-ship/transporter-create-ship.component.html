@@ -1,0 +1,119 @@
+<mat-stepper orientation="vertical" [linear]="true" #stepper>
+    <!-- Step 1: Basic Information -->
+    <mat-step [stepControl]="basicInfoFormGroup">
+      <form [formGroup]="basicInfoFormGroup">
+        <ng-template matStepLabel>Basic Information</ng-template>
+        <mat-form-field>
+          <mat-label>Start Location</mat-label>
+          <input matInput formControlName="startLocation" placeholder="Enter start location" required>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>End Location</mat-label>
+          <input matInput formControlName="endLocation" placeholder="Enter end location" required>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Departure date</mat-label>
+          <input matInput [min]="today" [matDatepicker]="picker1" formControlName="startDate" required>
+          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Arrival date</mat-label>
+          <input matInput [min]="today"  [matDatepicker]="picker2" formControlName="endDate" required>
+          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+    
+    <!-- Step 2: Vehicle Information -->
+    <mat-step [stepControl]="vehicleInfoFormGroup">
+      <form [formGroup]="vehicleInfoFormGroup">
+        <ng-template matStepLabel>Vehicle Information</ng-template>
+        <mat-form-field>
+          <mat-label>Make</mat-label>
+          <input matInput formControlName="make" placeholder="Enter vehicle make" required>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Model</mat-label>
+          <input matInput formControlName="model" placeholder="Enter vehicle model" required>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Year</mat-label>
+          <input matInput formControlName="year" type="number" placeholder="Enter vehicle year">
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+    
+    <!-- Step 3: Additional Information -->
+    <mat-step [stepControl]="additionalInfoFormGroup">
+      <form [formGroup]="additionalInfoFormGroup">
+        <ng-template matStepLabel>Additional Information</ng-template>
+        <mat-form-field>
+          <mat-label>Available Space</mat-label>
+          <input matInput formControlName="availableSpace" type="number" placeholder="Enter available space" required>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Max Weight</mat-label>
+          <input matInput formControlName="maxWeight" type="number" placeholder="Enter max weight" required>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Price per Parcel</mat-label>
+          <input matInput formControlName="pricePerParcel" type="number" placeholder="Enter price per parcel" required>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Phone Numbers</mat-label>
+          <input matInput formControlName="phoneNumber" placeholder="Enter phone numbers (comma separated)" required>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+    
+    <!-- Step 4: Review & Submit -->
+    <mat-step>
+        <ng-template matStepLabel>Review & Submit</ng-template>
+        <div class="lineInfo">  
+          <div class="columnInfo">
+            <h3>Basic Information</h3>
+            <p><strong>Start Location:</strong> {{ basicInfoFormGroup.get('startLocation')!.value }}</p>
+            <p><strong>End Location:</strong> {{ basicInfoFormGroup.get('endLocation')!.value }}</p>
+            <p><strong>Departure Date:</strong> {{ basicInfoFormGroup.get('startDate')!.value  | date  }}</p>
+            <p><strong>Arrival Date:</strong> {{ basicInfoFormGroup.get('endDate')!.value | date   }}</p>
+          </div>
+          
+          <div class="divider"></div>
+    
+          <div class="columnInfo">
+            <h3>Vehicle Information</h3>
+            <p><strong>Make:</strong> {{ vehicleInfoFormGroup.get('make')!.value }}</p>
+            <p><strong>Model:</strong> {{ vehicleInfoFormGroup.get('model')!.value }}</p>
+            <p><strong>Year:</strong> {{ vehicleInfoFormGroup.get('year')!.value }}</p>
+          </div>
+          
+          <div class="divider"></div>
+    
+          <div class="columnInfo">
+            <h3>Additional Information</h3>
+            <p><strong>Available Space:</strong> {{ additionalInfoFormGroup.get('availableSpace')!.value }} m³</p>
+            <p><strong>Max Weight:</strong> {{ additionalInfoFormGroup.get('maxWeight')!.value }} kg</p>
+            <p><strong>Price per Parcel:</strong> {{ additionalInfoFormGroup.get('pricePerParcel')!.value }} $</p>
+            <p><strong>Phone Numbers:</strong> {{ additionalInfoFormGroup.get('phoneNumber')!.value }}</p>
+          </div>
+        </div>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button (click)="onSubmit()">Submit</button>
+        </div>
+      </mat-step>
+  </mat-stepper>
+  

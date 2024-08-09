@@ -5,6 +5,7 @@ import { SharedModule } from '../../shared.module';
 import { FooterComponent } from '../footer/footer.component';
 import { ButtonCustomComponent } from '../button-custom/button-custom.component';
 import { MatSidenav } from '@angular/material/sidenav';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -16,10 +17,15 @@ import { MatSidenav } from '@angular/material/sidenav';
 export class NavbarComponent {
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private authService: AuthService) { }
 
   closeSideNav(){
     this.sidenav.close();
+  }
+
+  handleClickShip(){
+    this.authService.login('transporter');
+    this.router.navigate(['transporter']);
   }
 
 

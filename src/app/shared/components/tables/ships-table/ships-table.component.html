@@ -1,0 +1,78 @@
+<div class="filterLayout">
+  <mat-form-field>
+    <input matInput [(ngModel)]="pickUpFilterValue" (keyup)="applyFilterTest()" placeholder="Filter by Pickup">
+  </mat-form-field>
+  
+  <mat-form-field>
+    <input matInput [(ngModel)]="deliveryFilterValue" (keyup)="applyFilterTest()" placeholder="Filter by Delivery">
+  </mat-form-field>
+  
+  <mat-form-field>
+    <input matInput [min]="today" [(ngModel)]="startDateFilterValue"  [matDatepicker]="picker1" (dateChange)="applyFilterTest()"  placeholder="Filter by Start Date" >
+    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+    <mat-datepicker #picker1></mat-datepicker>
+  </mat-form-field>
+
+
+  <label for="price">Range price:</label>
+  <mat-slider
+  [min]=0
+  [max]=250
+  [step]="10"
+  discrete
+  [displayWith]="formatLabel"
+  (input)="applyFilterTest()"
+  >
+  <input [(ngModel)]="priceMin"   [value]="priceMin" matSliderStartThumb />
+  <input [(ngModel)]="priceMax"   [value]="priceMax" matSliderEndThumb />
+</mat-slider>
+
+<button mat-raised-button (click)="onReset()">Reset</button>
+
+ 
+</div>
+<div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
+    >
+  
+      <!-- Pickup Column -->
+      <ng-container matColumnDef="pickUp">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by pickUp" >pickUp</th>
+        <td mat-cell *matCellDef="let element"> {{element.pickUp}} </td>
+      </ng-container>
+  
+      <!-- End location Column -->
+      <ng-container matColumnDef="delivery">
+        <th mat-header-cell *matHeaderCellDef> delivery </th>
+        <td mat-cell *matCellDef="let element"> {{element.delivery}} </td>
+      </ng-container>
+  
+      <!-- Departure Date Column -->
+      <ng-container matColumnDef="startDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by startDate"> Departure Date </th>
+        <td mat-cell *matCellDef="let element"> {{element.startDate | date}} </td>
+      </ng-container>
+  
+      <!-- Arrival Date Column -->
+      <ng-container matColumnDef="EndDate" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by startDate" > Arrival Date </th>
+        <td mat-cell *matCellDef="let element"> {{element.EndDate | date}} </td>
+      </ng-container>
+
+      
+      <!-- Price Column -->
+      <ng-container matColumnDef="price" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by price" > Price per Kg </th>
+        <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+      </ng-container>
+
+      
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  
+    <mat-paginator [pageSizeOptions]="[5, 10, 20, 40, 100]"
+                   showFirstLastButtons
+                   aria-label="Select page of periodic elements">
+    </mat-paginator>
+  </div>

@@ -21,8 +21,8 @@
   <mat-sidenav-container class="example-container">
     <mat-sidenav #sidenav mode="side" opened>
       <mat-nav-list>
-        <mat-list-item  routerLink="sender">Ship</mat-list-item>
-        <mat-list-item routerLink="trnasporter">Find shipment</mat-list-item>
+        <mat-list-item (click)="handleClickShip()"  routerLink="transporter">Ship</mat-list-item>
+        <mat-list-item routerLink="sender">Find shipment</mat-list-item>
         <mat-list-item routerLink="">Contact</mat-list-item>
       </mat-nav-list>
     </mat-sidenav>

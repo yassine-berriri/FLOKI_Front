@@ -1,0 +1,27 @@
+.mat-stepper-vertical {
+    margin-top: 8px;
+  }
+  
+  .mat-mdc-form-field {
+    margin-top: 16px;
+  }
+
+  mat-form-field{
+    margin: 1%;
+  }
+
+  .lineInfo {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .columnInfo {
+    flex: 1;
+    margin: 0 10px;
+  }
+  
+  .divider {
+    border-left: 1px solid #ccc;
+    height: auto;
+    margin: 0 10px;
+  }

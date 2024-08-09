@@ -48,7 +48,7 @@ export class SignupComponent {
 
  //    sender$: Observable<Sender | null>;
   constructor(private fb: FormBuilder, private store: Store, private modalService: NgbModal,
-    private router: Router,
+    private router: Router
   ) {
     console.log("chui dans constructeur");
     this.senderForm = this.fb.group({
@@ -171,7 +171,8 @@ export class SignupComponent {
 
 
   onSignupSender(sender: Sender) {
-    this.store.dispatch(signupSender({ sender }));
+   // this.store.dispatch(signupSender({ sender }));
+   this.router.navigate(['/login']); 
   }
 
   onSignupTransporter(transporter: Transporter) {

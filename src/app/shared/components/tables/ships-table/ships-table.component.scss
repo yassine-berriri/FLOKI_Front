@@ -1,0 +1,30 @@
+table {
+    width: 100%;
+  }
+  
+  .mat-elevation-z8{
+
+    margin: 0.5%;
+  }
+  th.mat-sort-header-sorted {
+    color: black;
+  }
+
+  .filterLayout{
+    margin: 0.5%;
+    justify-content: flex-start;
+    display: flex;
+    gap: 3%;
+    align-items: center;
+    
+  }
+
+  mat-slider{
+   
+    width: 20%;
+    
+  }
+
+  label{
+    align-content: center;
+  }

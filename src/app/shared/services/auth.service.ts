@@ -23,6 +23,9 @@ export class AuthService {
     return this.userRole;
   }
 
+  isAuthenticated(): boolean {
+    return !!this.getRole(); 
+  }
 
   signupSender(sender: Sender): Observable<any> {
     return this.http.post(`${this.apiUrl}/signup/sender`, sender).pipe(
