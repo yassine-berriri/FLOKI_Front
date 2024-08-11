@@ -31,3 +31,6 @@ export const signupTransporterFailure = createAction(
   '[Auth] Signup Transporter Failure',
   props<{ error: any }>()
 );
+
+export const showLoader = createAction('[Auth] Show Loader');
+export const hideLoader = createAction('[Auth] Hide Loader');

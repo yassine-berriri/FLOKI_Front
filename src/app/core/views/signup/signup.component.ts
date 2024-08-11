@@ -11,14 +11,17 @@ import { select, Store, StoreModule } from '@ngrx/store';
 import { Sender } from '../../../shared/store/models/Sender';
 import { signupSender, signupTransporter } from '../../../shared/store/actions/auth.actions';
 import { Console } from 'console';
-import { selectAuthError, selectSender, selectTransporter } from '../../../shared/store/selectors/auth.selectors';
+import { selectAuthError, selectAuthSuccess, selectLoading, selectSender, selectTransporter } from '../../../shared/store/selectors/auth.selectors';
 import { selectAuthState } from '../../../shared/store/selectors/auth.selectors';
 
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Transporter } from '../../../shared/store/models/Transporter';
 import { ConfirmationPopupComponentComponent } from '../../../shared/components/popups/confirmation-popup.component/confirmation-popup.component.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
+import { LoaderPopupComponent } from '../../../shared/components/popups/loader-popup/loader-popup.component';
+import { MatDialog } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-signup',
@@ -31,7 +34,8 @@ import { Router } from '@angular/router';
     PhoneNumberInputComponent,
     CountrySelectComponent,
     ConfirmationPopupComponentComponent,
-    
+    LoaderPopupComponent,
+
   ],
  
   templateUrl: './signup.component.html',
@@ -45,10 +49,15 @@ export class SignupComponent {
   transporterFormStepThree: FormGroup;
   transporter: Transporter = new Transporter();
   error$: Observable<string | null>;
+  loading$: Observable<boolean>;
+  sender$: Observable<Sender|any>;
+
+  success$: Observable<boolean>;
+
 
  //    sender$: Observable<Sender | null>;
   constructor(private fb: FormBuilder, private store: Store, private modalService: NgbModal,
-    private router: Router
+    private router: Router, private dialog: MatDialog
   ) {
     console.log("chui dans constructeur");
     this.senderForm = this.fb.group({
@@ -80,7 +89,28 @@ export class SignupComponent {
     });
 
     this.error$ = this.store.pipe(select(selectAuthError));
+    this.loading$ = this.store.pipe(select(selectLoading));
+    this.sender$ = this.store.pipe(select(selectSender));
+    this.success$ = this.store.pipe(select(selectAuthSuccess));
+    
+    this.success$.subscribe(success => {
+      if (success) {
+        this.openSuccessModal();
+      }
+    });
 
+    this.loading$.subscribe(loading => {
+      if (loading) {
+        this.showLoading();
+      } else {
+        this.hideLoading();
+        
+      }
+    });
+    //this.handleSuccess();
+    
+   
+    
   ///  console.log("chui dans constructeur firstName = ", this.transporterFormGroup1!.value.firstName);
    // this.authError$ = this.store.select(selectAuthError);
      console.log("transporter = ",this.store.select(selectTransporter));
@@ -91,6 +121,14 @@ export class SignupComponent {
   onCountryChange(selectedCountry: string): void {
     this.transporterFormStepTwo.patchValue({ country: selectedCountry });
   }
+
+  handleSuccess() {
+    this.sender$.subscribe(sender => {
+      if (sender) {
+        this.openSuccessModal();
+      }
+      });
+    }
   
   
 
@@ -162,6 +200,7 @@ export class SignupComponent {
         //this.store.dispatch(signupTransporter({ transporter: this.transporter }));
         console.log("trnasporter = ", this.transporter);
         this.openModal();
+        this.onSignupTransporter(this.transporter);
       }
 
     
@@ -171,8 +210,8 @@ export class SignupComponent {
 
 
   onSignupSender(sender: Sender) {
-   // this.store.dispatch(signupSender({ sender }));
-   this.router.navigate(['/login']); 
+   this.store.dispatch(signupSender({ sender }));
+   //this.router.navigate(['/login']); 
   }
 
   onSignupTransporter(transporter: Transporter) {
@@ -183,17 +222,38 @@ export class SignupComponent {
     const modalRef = this.modalService.open(ConfirmationPopupComponentComponent);
     modalRef.componentInstance.title = 'Enter Verification Code';
     modalRef.componentInstance.body = 'Please enter the code you received by email:';
+    modalRef.componentInstance.needInput = false;
+    modalRef.componentInstance.needChoice = false;
     modalRef.componentInstance.footerButtons = [
       { text: 'Close', action: () => modalRef.close() }
     ];
 
     modalRef.componentInstance.codeSubmitted.subscribe((code: string) => {
       console.log('Code submitted:', code);
-      this.onSignupTransporter(this.transporter);
+      //this.onSignupTransporter(this.transporter);
       this.router.navigate(['/login']); 
       // You can handle the submitted code here, e.g., send it to a server or store it
     });
   }
+
+  openSuccessModal() {
+    const modalRef = this.modalService.open(ConfirmationPopupComponentComponent);
+    modalRef.componentInstance.title = 'Success popup';
+    modalRef.componentInstance.body = 'Form submitted successfully';
+    modalRef.componentInstance.needInput = false;
+    modalRef.componentInstance.needChoice = false;
+    modalRef.componentInstance.footerButtons = [
+      { text: 'Close', action: () => modalRef.close() }
+    ];
+
+    modalRef.componentInstance.codeSubmitted.subscribe((code: string) => {
+      console.log('Code submitted:', code);
+      //this.onSignupTransporter(this.transporter);
+      this.router.navigate(['/login']); 
+      // You can handle the submitted code here, e.g., send it to a server or store it
+    });
+  }
+
 
   handleError() {
     this.error$.subscribe(error => {
@@ -210,6 +270,14 @@ export class SignupComponent {
 
   ngOnInit() {
     this.handleError();
+  }
+
+  showLoading() {
+    this.dialog.open(LoaderPopupComponent, { width: '150px', height: '150px', disableClose: true });
+  }
+
+  hideLoading() {
+    this.dialog.closeAll();
   }
 
 }

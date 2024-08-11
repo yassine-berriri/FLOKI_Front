@@ -9,12 +9,12 @@ import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { authReducer } from '../app/shared/store/reducers/auth.reducers'; // Assurez-vous que ce chemin est correct
 import { AuthEffects } from '../app/shared/store/effects/AuthEffects'; // Assurez-vous que ce chemin est correct
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withFetch} from '@angular/common/http';
 import { shipReducer } from '../app/shared/store/reducers/ship.reducers'; 
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideHttpClient(),
+    provideHttpClient(withFetch()),
     provideRouter(routes),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideClientHydration(),

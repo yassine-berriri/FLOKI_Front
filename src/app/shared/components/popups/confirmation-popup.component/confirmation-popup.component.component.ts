@@ -15,6 +15,8 @@ export class ConfirmationPopupComponentComponent {
   @Input() body: string = '';
   @Input() footerButtons: { text: string, action: () => void }[] = [];
   @Output() codeSubmitted = new EventEmitter<string>();
+  @Input() needInput: boolean = false;
+  @Input() needChoice: boolean = false;
 
   inputCode: string = '';
 

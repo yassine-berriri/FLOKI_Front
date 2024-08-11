@@ -4,13 +4,15 @@
   </div>
   <div class="modal-body">
     <p>{{ body }}</p>
-    <div class="mb-3">
+    <div *ngIf="needInput" class="mb-3">
       <label for="codeInput" class="form-label">Enter Code</label>
       <input type="text" id="codeInput" class="form-control" [(ngModel)]="inputCode" />
-    </div>
+  </div>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-outline-secondary" (click)="close()">Close</button>
+    <div *ngIf="needChoice">
     <button type="button" class="btn btn-primary" (click)="submitCode()">Submit</button>
+   </div>
   </div>
   

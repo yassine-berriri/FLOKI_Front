@@ -21,6 +21,7 @@ import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './store/effects/AuthEffects';
 import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 // Importez ici d'autres modules que vous voulez partager
@@ -38,7 +39,8 @@ import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/m
     FormsModule,
     ReactiveFormsModule,
     NgbModalModule,
-    MatMomentDateModule
+    MatMomentDateModule, 
+    MatProgressSpinnerModule
   ],
   exports: [
     CommonModule,
@@ -50,7 +52,8 @@ import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/m
     MatListModule,
     RouterModule,
     ReactiveFormsModule,
-    MatMomentDateModule
+    MatMomentDateModule,
+    MatProgressSpinnerModule
   ],
   providers: [provideHttpClient(), CountryService,  { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } }]
 })

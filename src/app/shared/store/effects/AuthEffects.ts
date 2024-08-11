@@ -4,10 +4,13 @@ import { AuthService } from '../../services/auth.service';
 
 import { 
     signupSender, signupSenderSuccess, signupSenderFailure, 
-    signupTransporter, signupTransporterSuccess, signupTransporterFailure 
+    signupTransporter, signupTransporterSuccess, signupTransporterFailure, 
+    hideLoader,
+    showLoader
   } from '../actions/auth.actions';
-  import { catchError, map, mergeMap } from 'rxjs/operators';
+  import { catchError, map, mergeMap, tap } from 'rxjs/operators';
   import { of } from 'rxjs';
+
 
   @Injectable()
   export class AuthEffects {
@@ -21,11 +24,23 @@ import {
       ofType(signupSender),
       mergeMap(action =>
         this.authService.signupSender(action.sender).pipe(
-          map(sender => signupSenderSuccess({ sender })),
-          catchError(error => of(signupSenderFailure({ error })))
+          map(sender => { 
+            hideLoader();
+            
+            return signupSenderSuccess({ sender })}),
+          catchError(error => {
+            hideLoader();
+            return of(signupSenderFailure({ error }))})
         )
-      )
+      ),
+      tap(() => showLoader())
     ));
+
+      signupSenderSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(signupSenderSuccess),
+    map(() => hideLoader())
+  ));
+
   
     signupTransporter$ = createEffect(() => this.actions$.pipe(
       ofType(signupTransporter),
