@@ -9,7 +9,7 @@ import { PhoneNumberInputComponent } from '../../../shared/components/inputs/pho
 import { CountrySelectComponent } from '../../../shared/components/inputs/country-select/country-select.component';
 import { select, Store, StoreModule } from '@ngrx/store';
 import { Sender } from '../../../shared/store/models/Sender';
-import { signupSender, signupTransporter } from '../../../shared/store/actions/auth.actions';
+import { resetAuthState, signupSender, signupTransporter } from '../../../shared/store/actions/auth.actions';
 import { Console } from 'console';
 import { selectAuthError, selectAuthSuccess, selectLoading, selectSender, selectTransporter } from '../../../shared/store/selectors/auth.selectors';
 import { selectAuthState } from '../../../shared/store/selectors/auth.selectors';
@@ -21,6 +21,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { LoaderPopupComponent } from '../../../shared/components/popups/loader-popup/loader-popup.component';
 import { MatDialog } from '@angular/material/dialog';
+import { passwordMatchValidator } from '../../../shared/utils/utils';
+import { PasswordInputComponent } from '../../../shared/components/inputs/password-input/password-input.component';
 
 
 @Component({
@@ -35,7 +37,7 @@ import { MatDialog } from '@angular/material/dialog';
     CountrySelectComponent,
     ConfirmationPopupComponentComponent,
     LoaderPopupComponent,
-
+    PasswordInputComponent
   ],
  
   templateUrl: './signup.component.html',
@@ -68,7 +70,7 @@ export class SignupComponent {
       confirmPassword: ['', Validators.required],
 
       //phoneNumber: ['', Validators.required]
-    });
+    }, { validator: passwordMatchValidator() });
 
     this.transporterFormStepOne = this.fb.group({
       firstName: ['', Validators.required],
@@ -85,8 +87,9 @@ export class SignupComponent {
 
     this.transporterFormStepThree = this.fb.group({
       username: ['', Validators.required],
-      password: ['', Validators.required]
-    });
+      password: ['', Validators.required],
+      confirmPassword: ['', Validators.required],
+    }, { validator: passwordMatchValidator() });
 
     this.error$ = this.store.pipe(select(selectAuthError));
     this.loading$ = this.store.pipe(select(selectLoading));
@@ -107,7 +110,8 @@ export class SignupComponent {
         
       }
     });
-    //this.handleSuccess();
+    this.handleError();
+        //this.handleSuccess();
     
    
     
@@ -165,46 +169,22 @@ export class SignupComponent {
        
       }
     } else {
-      
-      if (this.transporterFormStepOne.valid) {
-        this.transporter.firstName = this.transporterFormStepOne.value.firstName,
-        this.transporter.lastName = this.transporterFormStepOne.value.lastName,
-        this.transporter.email = this.transporterFormStepOne.value.email
-        
-          
-         /* this.transporterForm.value.email,
-          this.transporterForm.value.phoneNumber,
-          this.transporterForm.value.address,
-          this.transporterForm.value.city,
-          this.transporterForm.value.country,
-          this.transporterForm.value.zipCode,
-          this.transporterForm.value.username,
-          this.transporterForm.value.password
-          */
-        
+
+
+      const transporter: Transporter = {
+        firstName: this.transporterFormStepOne.value.firstName,
+        lastName: this.transporterFormStepOne.value.lastName,
+        email: this.transporterFormStepOne.value.email,
+        address: this.transporterFormStepTwo.value.address,
+        city: this.transporterFormStepTwo.value.city,
+        country: this.transporterFormStepTwo.value.country,
+        zipCode: this.transporterFormStepTwo.value.zipCode,
+        username: this.transporterFormStepThree.value.username,
+        password: this.transporterFormStepThree.value.password,
        
-
-      //  this.store.dispatch(signupTransporter({  transporter }));
       }
+      this.onSignupTransporter(transporter);
 
-      if (this.transporterFormStepTwo.valid) {
-        this.transporter.address = this.transporterFormStepTwo.value.address || '';
-        this.transporter.city = this.transporterFormStepTwo.value.city || '';
-        this.transporter.country = this.transporterFormStepTwo.value.country || '';
-        this.transporter.zipCode = this.transporterFormStepTwo.value.zipCode || '';
-      }
-
-      if (this.transporterFormStepThree.valid) {
-        this.transporter.username = this.transporterFormStepThree.value.username || '';
-        this.transporter.password = this.transporterFormStepThree.value.password || '';
-        //this.store.dispatch(signupTransporter({ transporter: this.transporter }));
-        console.log("trnasporter = ", this.transporter);
-        this.openModal();
-        this.onSignupTransporter(this.transporter);
-      }
-
-    
-        
     }
   }
 
@@ -222,8 +202,8 @@ export class SignupComponent {
     const modalRef = this.modalService.open(ConfirmationPopupComponentComponent);
     modalRef.componentInstance.title = 'Enter Verification Code';
     modalRef.componentInstance.body = 'Please enter the code you received by email:';
-    modalRef.componentInstance.needInput = false;
-    modalRef.componentInstance.needChoice = false;
+    modalRef.componentInstance.needInput = true;
+    modalRef.componentInstance.needChoice = true;
     modalRef.componentInstance.footerButtons = [
       { text: 'Close', action: () => modalRef.close() }
     ];
@@ -246,6 +226,9 @@ export class SignupComponent {
       { text: 'Close', action: () => modalRef.close() }
     ];
 
+    this.resetState();
+
+
     modalRef.componentInstance.codeSubmitted.subscribe((code: string) => {
       console.log('Code submitted:', code);
       //this.onSignupTransporter(this.transporter);
@@ -264,12 +247,13 @@ export class SignupComponent {
         modalRef.componentInstance.footerButtons = [
           { text: 'Close', action: () => modalRef.close() }
         ];
+        this.resetState();
       }
     });
   }
 
   ngOnInit() {
-    this.handleError();
+    //this.handleError();
   }
 
   showLoading() {
@@ -278,6 +262,11 @@ export class SignupComponent {
 
   hideLoading() {
     this.dialog.closeAll();
+  }
+
+
+  resetState() {
+    this.store.dispatch(resetAuthState());
   }
 
 }

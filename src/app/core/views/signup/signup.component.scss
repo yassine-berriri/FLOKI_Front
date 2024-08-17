@@ -25,7 +25,19 @@
    
 }
 
+.input-password-group{
+    display: flex;
+    justify-content: space-between;
+}
+app-password-input{
+    width: 100%;
+}
 .body_transporter{
     
 }
 
+
+.passwordError{
+  
+    text-align: center;
+}

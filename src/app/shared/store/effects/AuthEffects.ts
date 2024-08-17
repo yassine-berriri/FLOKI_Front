@@ -26,7 +26,6 @@ import {
         this.authService.signupSender(action.sender).pipe(
           map(sender => { 
             hideLoader();
-            
             return signupSenderSuccess({ sender })}),
           catchError(error => {
             hideLoader();

@@ -48,13 +48,20 @@
               <input type="text" class="form-control me-2" formControlName="firstName" placeholder="FirstName" />
               <input type="text" class="form-control ms-2" formControlName="lastName"  placeholder="LastName" />
             </div>
+            <small *ngIf="senderForm.get('email')?.invalid && senderForm.get('email')?.touched" class="text-danger">
+              The email address is not valid.
+            </small>
             <div class="input-group mb-4">
               <input type="email" class="form-control"  formControlName="email" placeholder="Email" />
             </div>
-            <div class="input-group mb-4 d-flex justify-content-between">
-              <input type="password" class="form-control me-2" formControlName="password" placeholder="Create password" />
-              <input type="password" class="form-control me-2" formControlName="confirmPassword" placeholder="Confirm password" />
-              
+           
+            <div class="input-password-group mb-4">
+              <app-password-input class=" me-2" placeholder="Create password" formControlName="password"></app-password-input>
+              <app-password-input class=" me-2" placeholder="Confirm password" formControlName="confirmPassword"></app-password-input>
+
+            </div>
+            <div class="passwordError" *ngIf="senderForm.errors?.['mismatch'] && senderForm.get('confirmPassword')!.touched">
+              <small class="text-danger">Passwords do not match</small>
             </div>
 
             
@@ -80,7 +87,7 @@
     
       <mat-stepper [linear]="isLinear" #stepper>
         <mat-step [stepControl]="transporterFormStepOne">
-          <form [formGroup]="transporterFormStepOne" (ngSubmit)="signup()">
+          <form [formGroup]="transporterFormStepOne">
             <ng-template matStepLabel>Contact information</ng-template>
             <div class="row">
             <div class="col-md-5">
@@ -115,7 +122,7 @@
           </form>
         </mat-step>
         <mat-step [stepControl]="transporterFormStepTwo" label="Fill out your address">
-          <form [formGroup]="transporterFormStepTwo" (ngSubmit)="signup()">
+          <form [formGroup]="transporterFormStepTwo">
             <div class="form-group">
               <label for="inputAddress">Address</label>
               <input type="text" formControlName="address" class="form-control" id="inputAddress" placeholder="1234 Main St" />
@@ -146,7 +153,7 @@
           </form>
         </mat-step>
         <mat-step [stepControl]="transporterFormStepThree" label="Fill out your address">
-          <form [formGroup]="transporterFormStepThree" (ngSubmit)="signup()">
+          <form [formGroup]="transporterFormStepThree">
           <ng-template matStepLabel>Compte Floki</ng-template>
           <div class="row">
           <div class="col-md-5">
@@ -166,16 +173,19 @@
           </div>
   
           <div class="col-md-5">
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" />
+            <app-password-input class=" me-2" placeholder="Create password" formControlName="password"></app-password-input>
             <br>
-            <input type="password" formControlName="password" class="form-control" id="exampleInputPassword2" placeholder="Please cofirm your password" />
+            <app-password-input class=" me-2" placeholder="Confirm password" formControlName="confirmPassword"></app-password-input>
+            <div class="passwordError" *ngIf="transporterFormStepThree.errors?.['mismatch'] && transporterFormStepThree.get('confirmPassword')!.touched">
+              <small class="text-danger">Passwords do not match</small>
+            </div>
           </div>
   
         </div>
         <br>
           <div>
             <button mat-button matStepperPrevious>Back</button>
-            <button mat-button type="submit">Rejoindre Floky</button>
+            <button mat-button type="submit" (click)="signup()">Rejoindre Floky</button>
           </div>
           </form>
         </mat-step>

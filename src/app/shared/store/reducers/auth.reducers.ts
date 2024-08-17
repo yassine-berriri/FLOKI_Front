@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { signupSender, signupTransporter, signupSenderSuccess, signupSenderFailure,
-  signupTransporterSuccess, signupTransporterFailure,
+  signupTransporterSuccess, signupTransporterFailure, resetAuthState,
   showLoader,
   hideLoader
  } from '../actions/auth.actions';
@@ -25,9 +25,13 @@ export const initialState: AuthState = {
 
 export const authReducer = createReducer(
   initialState,
-  on(signupSender, (state, { sender }) => ({ ...state, sender, loading: true, success: true })),
+  on(signupSender, (state, { sender }) => ({ ...state, sender, loading: true, success: false })),
   on(signupTransporter, (state, { transporter }) => ({ ...state, transporter, loading: true })),
   on(showLoader, state => ({ ...state, loading: true })),
   on(hideLoader, state => ({ ...state, loading: false })),
   on(signupSenderSuccess, (state, { sender }) => ({ ...state, sender, loading: false, success: true })),
+  on(signupSenderFailure, (state, { error }) => ({ ...state, error, loading: false })),
+  on(signupTransporterSuccess, (state, { transporter }) => ({ ...state, transporter, loading: false, success: true })),
+  on(signupTransporterFailure, (state, { error }) => ({ ...state, error, loading: false })),
+  on(resetAuthState, state => ({ ...state, error: null, loading:false, success: false })),
 );

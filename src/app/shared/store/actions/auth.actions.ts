@@ -32,5 +32,7 @@ export const signupTransporterFailure = createAction(
   props<{ error: any }>()
 );
 
+export const resetAuthState = createAction('[Auth] Reset Auth State');
+
 export const showLoader = createAction('[Auth] Show Loader');
 export const hideLoader = createAction('[Auth] Hide Loader');
