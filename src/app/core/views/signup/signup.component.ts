@@ -23,6 +23,8 @@ import { LoaderPopupComponent } from '../../../shared/components/popups/loader-p
 import { MatDialog } from '@angular/material/dialog';
 import { passwordMatchValidator } from '../../../shared/utils/utils';
 import { PasswordInputComponent } from '../../../shared/components/inputs/password-input/password-input.component';
+import { SignUpRequestTransporter } from '../../../shared/store/models/SignUpRequestTransporter';
+import { AuthService } from '../../../shared/services/auth.service';
 
 
 @Component({
@@ -55,11 +57,12 @@ export class SignupComponent {
   sender$: Observable<Sender|any>;
 
   success$: Observable<boolean>;
+  authService: AuthService;
 
 
  //    sender$: Observable<Sender | null>;
   constructor(private fb: FormBuilder, private store: Store, private modalService: NgbModal,
-    private router: Router, private dialog: MatDialog
+    private router: Router, private dialog: MatDialog, private authSe: AuthService
   ) {
     console.log("chui dans constructeur");
     this.senderForm = this.fb.group({
@@ -98,9 +101,14 @@ export class SignupComponent {
     
     this.success$.subscribe(success => {
       if (success) {
-        this.openSuccessModal();
+        if (this.userType() === "sender") {
+          this.openSuccessModal();
+        } else {
+          this.openModal();
+        }
       }
     });
+    
 
     this.loading$.subscribe(loading => {
       if (loading) {
@@ -113,7 +121,7 @@ export class SignupComponent {
     this.handleError();
         //this.handleSuccess();
     
-   
+    this.authService = authSe;
     
   ///  console.log("chui dans constructeur firstName = ", this.transporterFormGroup1!.value.firstName);
    // this.authError$ = this.store.select(selectAuthError);
@@ -150,7 +158,6 @@ export class SignupComponent {
     this.userType.set(userType);
   }
 
-
   signup() {
     console.log("userType = ", this.userType());
     if (this.userType != null && this.userType() == "sender") {
@@ -171,7 +178,7 @@ export class SignupComponent {
     } else {
 
 
-      const transporter: Transporter = {
+       this.transporter = {
         firstName: this.transporterFormStepOne.value.firstName,
         lastName: this.transporterFormStepOne.value.lastName,
         email: this.transporterFormStepOne.value.email,
@@ -183,7 +190,7 @@ export class SignupComponent {
         password: this.transporterFormStepThree.value.password,
        
       }
-      this.onSignupTransporter(transporter);
+      this.onSignupTransporter(this.transporter);
 
     }
   }
@@ -209,11 +216,32 @@ export class SignupComponent {
     ];
 
     modalRef.componentInstance.codeSubmitted.subscribe((code: string) => {
+      const signUpRequest = new SignUpRequestTransporter(code.trim(), this.transporter);
+      this.verifyTransporter(signUpRequest);
       console.log('Code submitted:', code);
       //this.onSignupTransporter(this.transporter);
       this.router.navigate(['/login']); 
       // You can handle the submitted code here, e.g., send it to a server or store it
     });
+  }
+
+  verifyTransporter(signUpRequest: SignUpRequestTransporter) {
+    this.authSe.verifyTransporter(signUpRequest).subscribe({
+      next: (response) => {
+        console.log('Response:', response);
+        this.openSuccessModal();
+        // this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        console.error('Error:', error);
+        const modalRef = this.modalService.open(ConfirmationPopupComponentComponent);
+        modalRef.componentInstance.title = 'Error';
+        modalRef.componentInstance.body = error;
+        modalRef.componentInstance.footerButtons = [
+          { text: 'Close', action: () => modalRef.close() }
+        ];
+      }
+    })
   }
 
   openSuccessModal() {
@@ -227,9 +255,11 @@ export class SignupComponent {
     ];
 
     this.resetState();
-
+    //this.router.navigate(['/login']); 
 
     modalRef.componentInstance.codeSubmitted.subscribe((code: string) => {
+
+
       console.log('Code submitted:', code);
       //this.onSignupTransporter(this.transporter);
       this.router.navigate(['/login']); 

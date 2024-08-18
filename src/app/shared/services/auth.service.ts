@@ -3,6 +3,7 @@ import { Sender } from '../store/models/Sender';
 import { catchError, Observable, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Transporter } from '../store/models/Transporter';
+import { SignUpRequestTransporter } from '../store/models/SignUpRequestTransporter';
 
 @Injectable({
   providedIn: 'root'
@@ -34,10 +35,21 @@ export class AuthService {
   }
 
   signupTransporter(transporter: Transporter): Observable<any> {
-    return this.http.post(`${this.apiUrl}/signup/transporter`, transporter).pipe(
-      catchError(this.handleError)
-    );
+    return this.http.post(`${this.apiUrl}/signup/transporter`, transporter, { responseType: 'text' })
+      .pipe(
+        catchError(this.handleError)
+      );
   }
+
+
+  verifyTransporter(transporter: SignUpRequestTransporter): Observable<any> {
+  
+    return this.http.post(`${this.apiUrl}/verify`, transporter, { responseType: 'text' })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+  
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'An unknown error occurred!';

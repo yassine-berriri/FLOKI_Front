@@ -31,7 +31,7 @@ export const authReducer = createReducer(
   on(hideLoader, state => ({ ...state, loading: false })),
   on(signupSenderSuccess, (state, { sender }) => ({ ...state, sender, loading: false, success: true })),
   on(signupSenderFailure, (state, { error }) => ({ ...state, error, loading: false })),
-  on(signupTransporterSuccess, (state, { transporter }) => ({ ...state, transporter, loading: false, success: true })),
+  on(signupTransporterSuccess, (state, { transporter }) => ({ ...state, transporter, loading: false, error: false, success: true })),
   on(signupTransporterFailure, (state, { error }) => ({ ...state, error, loading: false })),
   on(resetAuthState, state => ({ ...state, error: null, loading:false, success: false })),
 );

@@ -35,10 +35,11 @@ import {
       tap(() => showLoader())
     ));
 
-      signupSenderSuccess$ = createEffect(() => this.actions$.pipe(
+    /*  signupSenderSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(signupSenderSuccess),
     map(() => hideLoader())
   ));
+  */
 
   
     signupTransporter$ = createEffect(() => this.actions$.pipe(
