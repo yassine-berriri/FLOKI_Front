@@ -3,10 +3,25 @@
     <mat-step [stepControl]="basicInfoFormGroup">
       <form [formGroup]="basicInfoFormGroup">
         <ng-template matStepLabel>Basic Information</ng-template>
-        <mat-form-field>
+
+        <mat-form-field >
           <mat-label>Start Location</mat-label>
-          <input matInput formControlName="startLocation" placeholder="Enter start location" required>
+          <input type="text"
+                 placeholder="Enter start location"
+                 aria-label="start Location"
+                 matInput
+                 formControlName="startLocation"
+                 [matAutocomplete]="auto">
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+              {{ option }}
+            </mat-option>
+          </mat-autocomplete>
         </mat-form-field>
+      <!--  <mat-form-field>
+          <mat-label>Start Location</mat-label>
+          <input matInput appGooglePlace (addressChange)="onAddressChange($event)" formControlName="startLocation" placeholder="Enter start location" required>
+        </mat-form-field> -->
         <mat-form-field>
           <mat-label>End Location</mat-label>
           <input matInput formControlName="endLocation" placeholder="Enter end location" required>

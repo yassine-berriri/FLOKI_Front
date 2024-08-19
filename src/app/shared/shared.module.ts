@@ -22,12 +22,14 @@ import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './store/effects/AuthEffects';
 import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { PositionStackDirective } from './directives/PositionStackDirective';
+import { LocationService } from './services/location.service';
 
 
 // Importez ici d'autres modules que vous voulez partager
 
 @NgModule({
-  declarations: [],
+  declarations: [PositionStackDirective],
   imports: [
     CommonModule,
     MatToolbarModule,
@@ -55,6 +57,6 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatMomentDateModule,
     MatProgressSpinnerModule
   ],
-  providers: [provideHttpClient(), CountryService,  { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } }]
+  providers: [provideHttpClient(), CountryService,  { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } }, LocationService]
 })
 export class SharedModule { }
