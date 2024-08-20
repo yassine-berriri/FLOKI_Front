@@ -25,3 +25,11 @@
     height: auto;
     margin: 0 10px;
   }
+
+  .form-container-location-inputs{
+    display: flex;
+    flex-direction: row;
+  }
+  .flex-item-location-input{
+    width: 40%;
+  }

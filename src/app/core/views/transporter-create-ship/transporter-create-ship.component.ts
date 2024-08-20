@@ -16,6 +16,9 @@ import * as ShipActions from '../../../shared/store/actions/ship.actions';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { SharedModule } from '../../../shared/shared.module';
 import { LocationService } from '../../../shared/services/location.service';
+import { LocationAutoCompleteInputComponent } from '../../../shared/components/inputs/location-auto-complete-input/location-auto-complete-input.component';
+import { CarService } from '../../../shared/services/car.service';
+import { VehicleTypeListComponent } from '../../../shared/components/lists/vehicle-type-list/vehicle-type-list.component';
 
 
 @Component({
@@ -31,7 +34,9 @@ import { LocationService } from '../../../shared/services/location.service';
     MatMomentDateModule,
     DatePipe,
     MatAutocompleteModule,
-    SharedModule
+    SharedModule,
+    LocationAutoCompleteInputComponent,
+    VehicleTypeListComponent
     
   ],
     providers: [
@@ -48,10 +53,11 @@ export class TransporterCreateShipComponent implements OnInit {
   ships$: Observable<Ship[]>;
   today = new Date();
   options: string[] = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix']; // Example options
-  filteredOptions!: Observable<string[]>;
-  myControl = new FormControl('');
+  filteredOptionsStartL!: Observable<string[]>;
+  filteredOptionsEndL!: Observable<string[]>;
+  filteredOptionsMake!: Observable<string[]>;
 
-  constructor(private fb: FormBuilder, private store: Store, private locationService: LocationService) {
+  constructor(private fb: FormBuilder, private store: Store, private locationService: LocationService, private carService: CarService) {
     this.ships$ = this.store.select(selectAllShips);
     console.log("ships", this.ships$);
   }
@@ -60,10 +66,10 @@ export class TransporterCreateShipComponent implements OnInit {
 
   ngOnInit() {
     this.basicInfoFormGroup = this.fb.group({
-      startLocation: ['', Validators.required],
-      endLocation: ['', Validators.required],
-      startDate: ['', Validators.required],
-      endDate: ['', Validators.required],
+      startLocation: [''],
+      endLocation: [''],
+      startDate: [''],
+      endDate: [''],
     });
 
     this.vehicleInfoFormGroup = this.fb.group({
@@ -78,23 +84,28 @@ export class TransporterCreateShipComponent implements OnInit {
       pricePerParcel: [0, Validators.required],
       phoneNumber: ['', Validators.required],
     });
-
-    if (this.verifStartLocation()) {
-    this.filteredOptions = this.basicInfoFormGroup.get('startLocation')!.valueChanges.pipe(
-      debounceTime(1000),  // Add a debounce time to avoid making too many API calls
+    
+  
+    this.filteredOptionsStartL = this.basicInfoFormGroup.get('startLocation')!.valueChanges.pipe(
+      debounceTime(500),  // Add a debounce time to avoid making too many API calls
       switchMap(value => this.locationService.searchLocation(value))
     );
-   }
+   
+
+   this.filteredOptionsEndL = this.basicInfoFormGroup.get('endLocation')!.valueChanges.pipe(
+    debounceTime(500),  
+    switchMap(value => this.locationService.searchLocation(value))
+  );
+    
+  this.filteredOptionsMake = this.vehicleInfoFormGroup.get('make')!.valueChanges.pipe(
+    debounceTime(500),  
+    switchMap(value => this.carService.getVehicleMake(value))
+  );
   }
 
   verifStartLocation(): boolean {
     debounceTime(1000)
     return this.basicInfoFormGroup.get('startLocation')!.value === '';
-  }
-
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
   

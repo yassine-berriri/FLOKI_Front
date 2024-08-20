@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 @Injectable({
@@ -14,6 +14,11 @@ export class LocationService {
 
   searchLocation(query: string, limit: number = 5): Observable<string[]> {
     console.log("query", query);
+    if (!query.trim() || query.length < 3) {
+      console.log('Query is empty, request canceled.');
+      return of([]); 
+    }
+
     const params = new HttpParams()
       .set('access_key', this.apiKey)
       .set('query', query)

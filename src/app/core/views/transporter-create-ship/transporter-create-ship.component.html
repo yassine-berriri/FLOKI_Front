@@ -3,17 +3,24 @@
     <mat-step [stepControl]="basicInfoFormGroup">
       <form [formGroup]="basicInfoFormGroup">
         <ng-template matStepLabel>Basic Information</ng-template>
-
-        <mat-form-field >
+        
+        <!--
+        <app-location-auto-complete-input
+        formControlName="startLocation"
+        placeholder="Start Location">
+        </app-location-auto-complete-input>
+        -->
+        <div class="form-container-location-inputs">
+        <mat-form-field class="flex-item-location-input" >
           <mat-label>Start Location</mat-label>
           <input type="text"
                  placeholder="Enter start location"
                  aria-label="start Location"
                  matInput
                  formControlName="startLocation"
-                 [matAutocomplete]="auto">
-          <mat-autocomplete #auto="matAutocomplete">
-            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                 [matAutocomplete]="startauto">
+          <mat-autocomplete #startauto="matAutocomplete">
+            <mat-option *ngFor="let option of filteredOptionsStartL | async" [value]="option">
               {{ option }}
             </mat-option>
           </mat-autocomplete>
@@ -22,22 +29,42 @@
           <mat-label>Start Location</mat-label>
           <input matInput appGooglePlace (addressChange)="onAddressChange($event)" formControlName="startLocation" placeholder="Enter start location" required>
         </mat-form-field> -->
+
+        <mat-form-field class="flex-item-location-input" >
+          <mat-label>End Location</mat-label>
+          <input type="text"
+                 placeholder="Enter end location"
+                 aria-label="end Location"
+                 matInput
+                 formControlName="endLocation"
+                 [matAutocomplete]="endauto">
+          <mat-autocomplete #endauto="matAutocomplete">
+            <mat-option *ngFor="let option of filteredOptionsEndL | async" [value]="option">
+              {{ option }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+        <!--
         <mat-form-field>
           <mat-label>End Location</mat-label>
           <input matInput formControlName="endLocation" placeholder="Enter end location" required>
         </mat-form-field>
-        <mat-form-field>
+        -->
+        <div class="form-container-location-inputs">
+        <mat-form-field class="flex-item-location-input">
           <mat-label>Departure date</mat-label>
-          <input matInput [min]="today" [matDatepicker]="picker1" formControlName="startDate" required>
+          <input matInput [min]="today" [matDatepicker]="picker1" formControlName="startDate" >
           <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
           <mat-datepicker #picker1></mat-datepicker>
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field class="flex-item-location-input">
           <mat-label>Arrival date</mat-label>
-          <input matInput [min]="today"  [matDatepicker]="picker2" formControlName="endDate" required>
+          <input matInput [min]="today"  [matDatepicker]="picker2" formControlName="endDate">
           <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
           <mat-datepicker #picker2></mat-datepicker>
         </mat-form-field>
+      </div>
         <div>
           <button mat-button matStepperNext>Next</button>
         </div>
@@ -50,8 +77,24 @@
         <ng-template matStepLabel>Vehicle Information</ng-template>
         <mat-form-field>
           <mat-label>Make</mat-label>
+          <input type="text"
+                 placeholder="Enter vehicle make"
+                 aria-label="Enter vehicle make"
+                 matInput
+                 formControlName="make"
+                 [matAutocomplete]="makeauto">
+          <mat-autocomplete #makeauto="matAutocomplete">
+            <mat-option *ngFor="let option of filteredOptionsMake | async" [value]="option">
+              {{ option }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <!--
+        <mat-form-field>
+          <mat-label>Make</mat-label>
           <input matInput formControlName="make" placeholder="Enter vehicle make" required>
         </mat-form-field>
+        -->
         <mat-form-field>
           <mat-label>Model</mat-label>
           <input matInput formControlName="model" placeholder="Enter vehicle model" required>
@@ -60,6 +103,9 @@
           <mat-label>Year</mat-label>
           <input matInput formControlName="year" type="number" placeholder="Enter vehicle year">
         </mat-form-field>
+
+        <app-vehicle-type-list></app-vehicle-type-list>
+
         <div>
           <button mat-button matStepperPrevious>Back</button>
           <button mat-button matStepperNext>Next</button>

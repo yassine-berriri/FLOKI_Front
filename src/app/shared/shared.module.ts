@@ -24,6 +24,7 @@ import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/m
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { PositionStackDirective } from './directives/PositionStackDirective';
 import { LocationService } from './services/location.service';
+import { CarService } from './services/car.service';
 
 
 // Importez ici d'autres modules que vous voulez partager
@@ -57,6 +58,11 @@ import { LocationService } from './services/location.service';
     MatMomentDateModule,
     MatProgressSpinnerModule
   ],
-  providers: [provideHttpClient(), CountryService,  { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } }, LocationService]
+  providers: [provideHttpClient(), 
+      CountryService,
+      { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } }, 
+      LocationService,
+      CarService
+    ]
 })
 export class SharedModule { }
