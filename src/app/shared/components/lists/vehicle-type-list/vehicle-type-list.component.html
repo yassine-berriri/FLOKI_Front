@@ -1,22 +1,24 @@
-<div class="selection-list">
-    <div *ngFor="let item of items">
-        <p>12123</p>
-        <app-vehicle-type-item
-          [imageUrl]="item.imageUrl"
-          [title]="item.title"
-          [isSelected]="item.isSelected"
-          (itemSelected)="onItemSelected(item.id)">
-        </app-vehicle-type-item>
-      </div>
-   
-  
-    <div class="selected-items">
-      <h3>Selected Items:</h3>
-      <ul>
-        <li *ngFor="let selectedItem of getSelectedItems()">
-          {{ selectedItem.title }}
-        </li>
-      </ul>
-    </div>
+<div class="body">
+  <div class="selection-list">
+  <ul *ngFor="let item of items; let i = index">
+    <app-vehicle-type-item
+      [imageUrl]="item.imageUrl"
+      [title]="item.title"
+      [isSelected]="item.isSelected"
+      (itemSelected)="onItemSelected(i)">
+    </app-vehicle-type-item>
+  </ul>
+</div>
+  <br>
+  <div class="selected-items">
+    <h3>Selected Items:</h3>
+    <ul>
+      <li *ngFor="let selectedItem of getSelectedItems()">
+        {{ selectedItem.title }}
+      </li>
+    </ul>
   </div>
-  
+
+</div>
+
+

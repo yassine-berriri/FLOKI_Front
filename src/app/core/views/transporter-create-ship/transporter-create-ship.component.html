@@ -104,7 +104,7 @@
           <input matInput formControlName="year" type="number" placeholder="Enter vehicle year">
         </mat-form-field>
 
-        <app-vehicle-type-list></app-vehicle-type-list>
+        <app-vehicle-type-list (itemSelected)="onVehicleTypeSelected($event)"  (itemUnselected)="onVehicleTypeUnselected($event)"></app-vehicle-type-list>
 
         <div>
           <button mat-button matStepperPrevious>Back</button>

@@ -1,24 +1,41 @@
+@import "../../../scss/variables" ;
+
 .selection-item {
+  width: 100%;
+  height: 100%;
+  max-width: 200px; /* Taille maximale du conteneur */
+  max-height: 200px;
   border: 2px solid #ddd;
   padding: 10px;
   text-align: center;
   cursor: pointer;
   transition: background-color 0.3s;
   background-color: #fff;
+  border-radius: 5%;
 
   &.selected {
-    background-color: #cce5ff; /* Couleur de fond lorsque l'élément est sélectionné */
+    background-color: $purple-color;
+    p{
+      color: white;
+    }
+    /* Couleur de fond lorsque l'élément est sélectionné */
   }
 
   img {
-    width: 100px;
-    height: 100px;
+    width: 100%; /* L'image prendra toute la largeur disponible */
+    height: auto; /* La hauteur de l'image sera automatiquement ajustée */
+    max-width: 100px; /* Taille maximale de l'image */
+    max-height: 100px;
     object-fit: cover;
     margin-bottom: 10px;
   }
 
-  h3 {
-    font-size: 16px;
+  p {
+    font-size: 0.8em; /* Taille de la police relative pour s'adapter */
     margin: 0;
   }
+}
+
+.selection-item:hover {
+  background-color: $purple-color; /* Couleur de fond au survol */
 }

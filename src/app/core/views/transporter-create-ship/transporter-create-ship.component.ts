@@ -57,10 +57,14 @@ export class TransporterCreateShipComponent implements OnInit {
   filteredOptionsEndL!: Observable<string[]>;
   filteredOptionsMake!: Observable<string[]>;
 
+  listSelectedVehicleTypes: any[] = [];
+  
+  selectedVehicleType: any;
   constructor(private fb: FormBuilder, private store: Store, private locationService: LocationService, private carService: CarService) {
     this.ships$ = this.store.select(selectAllShips);
     console.log("ships", this.ships$);
   }
+
 
   
 
@@ -132,6 +136,18 @@ onSubmit() {
     console.log('Added ship:', ship);
   });
 
+}
+
+onVehicleTypeSelected(item: any) {
+  this.selectedVehicleType = item;
+  this.listSelectedVehicleTypes.push(item);
+  console.log('Selected Vehicle Type:', this.selectedVehicleType);
+  console.log('List of Selected Vehicle Types:', this.listSelectedVehicleTypes);
+  // Vous pouvez maintenant faire quelque chose avec l'élément sélectionné
+}
+
+onVehicleTypeUnselected(item: any) {
+ 
 }
 
 }
