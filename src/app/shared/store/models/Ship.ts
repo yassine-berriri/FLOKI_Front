@@ -6,7 +6,7 @@ export interface Ship {
     endLocation: string;      // Point d'arrivée
     startDate: Date;          // Date de départ
     endDate: Date;            // Date d'arrivée
-    vehicle: Vehicle;         // Informations sur le véhicule
+    vehicle: Vehicle[];         // Informations sur le véhicule
     availableSpace: number;   // Espace disponible (calculé)
     phoneNumber: string[];      // Numéro de téléphone du transporteur
     maxWeight: number;        // Poids maximum en kilos

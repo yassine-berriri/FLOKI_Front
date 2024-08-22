@@ -75,35 +75,46 @@
     <mat-step [stepControl]="vehicleInfoFormGroup">
       <form [formGroup]="vehicleInfoFormGroup">
         <ng-template matStepLabel>Vehicle Information</ng-template>
+
+        <ul *ngFor="let item of listSelectedVehicleTypes">
+
+        <p>Please provide details about your {{item.title}}</p>
+
         <mat-form-field>
-          <mat-label>Make</mat-label>
-          <input type="text"
-                 placeholder="Enter vehicle make"
-                 aria-label="Enter vehicle make"
-                 matInput
-                 formControlName="make"
-                 [matAutocomplete]="makeauto">
-          <mat-autocomplete #makeauto="matAutocomplete">
-            <mat-option *ngFor="let option of filteredOptionsMake | async" [value]="option">
-              {{ option }}
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-        <!--
-        <mat-form-field>
-          <mat-label>Make</mat-label>
-          <input matInput formControlName="make" placeholder="Enter vehicle make" required>
-        </mat-form-field>
-        -->
-        <mat-form-field>
-          <mat-label>Model</mat-label>
-          <input matInput formControlName="model" placeholder="Enter vehicle model" required>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Year</mat-label>
-          <input matInput formControlName="year" type="number" placeholder="Enter vehicle year">
+          <mat-label>How many {{item.title}} do you have? </mat-label>
+          <input matInput formControlName="quantity" type="number" placeholder="Enter the number of vehicles" required>
         </mat-form-field>
 
+        <div formArrayName="vehicles">
+          <div *ngFor="let vehicle of vehicles.controls; let i = index" [formGroupName]="i">
+            <!--
+            <mat-form-field>
+              <mat-label>Make</mat-label>
+              <input type="text"
+                     placeholder="Enter vehicle make"
+                     aria-label="Enter vehicle make"
+                     matInput
+                     formControlName="make"
+                     [matAutocomplete]="makeauto">
+              <mat-autocomplete #makeauto="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptionsMake[i] | async" [value]="option">
+                  {{ option }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            -->
+            <mat-form-field>
+              <mat-label>Make</mat-label>
+              <input matInput formControlName="make" placeholder="Enter vehicle model">
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Model</mat-label>
+              <input matInput formControlName="model" placeholder="Enter vehicle model">
+            </mat-form-field>
+          </div>
+        </div>
+
+      </ul>
         <app-vehicle-type-list (itemSelected)="onVehicleTypeSelected($event)"  (itemUnselected)="onVehicleTypeUnselected($event)"></app-vehicle-type-list>
 
         <div>
@@ -156,9 +167,10 @@
     
           <div class="columnInfo">
             <h3>Vehicle Information</h3>
-            <p><strong>Make:</strong> {{ vehicleInfoFormGroup.get('make')!.value }}</p>
-            <p><strong>Model:</strong> {{ vehicleInfoFormGroup.get('model')!.value }}</p>
-            <p><strong>Year:</strong> {{ vehicleInfoFormGroup.get('year')!.value }}</p>
+            <div *ngFor="let vehicleGroup of vehicles.controls; let i = index">
+              <p><strong>Make:</strong> {{ vehicleGroup.get('make')?.value }}</p>
+              <p><strong>Model:</strong> {{ vehicleGroup.get('model')?.value }}</p>
+            </div>
           </div>
           
           <div class="divider"></div>
