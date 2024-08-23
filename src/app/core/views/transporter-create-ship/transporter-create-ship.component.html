@@ -73,20 +73,24 @@
     
     <!-- Step 2: Vehicle Information -->
     <mat-step [stepControl]="vehicleInfoFormGroup">
-      <form [formGroup]="vehicleInfoFormGroup">
+      <!--<form [formGroup]="vehicleInfoFormGroup">-->
         <ng-template matStepLabel>Vehicle Information</ng-template>
+        <div class="c" >
+        <ul  *ngFor="let item of vehiclePerTypeList; let i = index">
 
-        <ul *ngFor="let item of listSelectedVehicleTypes">
-
-        <p>Please provide details about your {{item.title}}</p>
+        <p>Please provide details about your {{item.type }}</p>
 
         <mat-form-field>
-          <mat-label>How many {{item.title}} do you have? </mat-label>
-          <input matInput formControlName="quantity" type="number" placeholder="Enter the number of vehicles" required>
-        </mat-form-field>
+          <mat-label>How many {{item.type }} do you have? </mat-label>
+          <mat-select [(ngModel)]="item.quantity" (selectionChange)="onQuantityChange(i, $event)">
+            <mat-option *ngFor="let value of [1, 2, 3, 4, 5]" [value]="value">
+              {{ value }}
+            </mat-option>
+          </mat-select>       
+         </mat-form-field>
 
-        <div formArrayName="vehicles">
-          <div *ngFor="let vehicle of vehicles.controls; let i = index" [formGroupName]="i">
+        <div  >
+          <div *ngFor="let vehicle of item.vehicles; let j = index" >
             <!--
             <mat-form-field>
               <mat-label>Make</mat-label>
@@ -105,23 +109,24 @@
             -->
             <mat-form-field>
               <mat-label>Make</mat-label>
-              <input matInput formControlName="make" placeholder="Enter vehicle model">
+              <input matInput  [(ngModel)]="vehicle.make" placeholder="Enter vehicle model">
             </mat-form-field>
             <mat-form-field>
               <mat-label>Model</mat-label>
-              <input matInput formControlName="model" placeholder="Enter vehicle model">
+              <input matInput  [(ngModel)]="vehicle.model" placeholder="Enter vehicle model">
             </mat-form-field>
           </div>
         </div>
 
       </ul>
+    </div>
         <app-vehicle-type-list (itemSelected)="onVehicleTypeSelected($event)"  (itemUnselected)="onVehicleTypeUnselected($event)"></app-vehicle-type-list>
 
         <div>
           <button mat-button matStepperPrevious>Back</button>
           <button mat-button matStepperNext>Next</button>
         </div>
-      </form>
+     <!-- </form> -->
     </mat-step>
     
     <!-- Step 3: Additional Information -->
@@ -164,14 +169,17 @@
           </div>
           
           <div class="divider"></div>
-    
-          <div class="columnInfo">
+      <!--
+          <div class="columnInfo" *ngIf="vehicleTypes">
             <h3>Vehicle Information</h3>
-            <div *ngFor="let vehicleGroup of vehicles.controls; let i = index">
+          
+            <div *ngFor="let vehicleGroup of vehicleTypes!.controls; let i = index">
               <p><strong>Make:</strong> {{ vehicleGroup.get('make')?.value }}</p>
               <p><strong>Model:</strong> {{ vehicleGroup.get('model')?.value }}</p>
             </div>
+            
           </div>
+          -->
           
           <div class="divider"></div>
     

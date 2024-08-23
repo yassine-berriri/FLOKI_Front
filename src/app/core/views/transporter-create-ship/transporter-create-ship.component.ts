@@ -21,6 +21,8 @@ import { CarService } from '../../../shared/services/car.service';
 import { VehicleTypeListComponent } from '../../../shared/components/lists/vehicle-type-list/vehicle-type-list.component';
 import { VehicleType } from '../../../shared/store/models/VehicleType';
 import { Vehicle } from '../../../shared/store/models/Vehicle';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { VehiclePerType } from '../../../shared/store/models/VehiclePerTyper';
 
 
 @Component({
@@ -38,7 +40,8 @@ import { Vehicle } from '../../../shared/store/models/Vehicle';
     MatAutocompleteModule,
     SharedModule,
     LocationAutoCompleteInputComponent,
-    VehicleTypeListComponent
+    VehicleTypeListComponent,
+    MatSelectModule
     
   ],
     providers: [
@@ -62,7 +65,7 @@ export class TransporterCreateShipComponent implements OnInit {
 
   listSelectedVehicleTypes: any[] = [];
   vehicleList: Vehicle[]= [];
-  quantity: number = 1;
+  vehiclePerTypeList: VehiclePerType[] = [];
   
   selectedVehicleType: any;
   constructor(private fb: FormBuilder, private store: Store, private locationService: LocationService, private carService: CarService) {
@@ -82,10 +85,10 @@ export class TransporterCreateShipComponent implements OnInit {
     });
 
 
+    /*
     this.vehicleInfoFormGroup = this.fb.group({
-      quantity: [1, Validators.required],
-      vehicles: this.fb.array([]) // Start with an empty FormArray
-    });
+      vehicleTypes: this.fb.array([]),
+    });*/
  
 
     this.additionalInfoFormGroup = this.fb.group({
@@ -96,11 +99,9 @@ export class TransporterCreateShipComponent implements OnInit {
     });
     
 
-    this.vehicleInfoFormGroup.get('quantity')!.valueChanges.subscribe(quantity => {
-      this.setVehicleFormGroups(quantity);
-    });
+ 
 
-    this.setVehicleFormGroups(this.vehicleInfoFormGroup.get('quantity')!.value);
+    //this.setVehicleFormGroups(this.vehicleInfoFormGroup.get('quantity')!.value);
 
 
   
@@ -120,7 +121,7 @@ export class TransporterCreateShipComponent implements OnInit {
   }
 
   subscribeToMakeValueChanges() {
-    const vehiclesArray = this.vehicles;
+    const vehiclesArray = this.vehicleInfoFormGroup.get('vehicles') as FormArray;
   
     vehiclesArray.controls.forEach((control: AbstractControl, index: number) => {
       const group = control as FormGroup;
@@ -137,38 +138,8 @@ export class TransporterCreateShipComponent implements OnInit {
   }
 
 
-  setVehicleFormGroups(quantity: number) {
-    const vehiclesFormArray = this.vehicles;
-    vehiclesFormArray.clear(); // Clear existing controls
-
-    for (let i = 0; i < quantity; i++) {
-      vehiclesFormArray.push(this.createVehicleFormGroup());
-    }
-  }
-
-  get vehicles(): FormArray {
-    return this.vehicleInfoFormGroup.get('vehicles') as FormArray;
-  }
-
-     createVehicleFormGroup(): FormGroup {
-      return this.fb.group({
-        make: ['', Validators.required],
-        model: ['', Validators.required]
-            });
-    }
-
-    addVehicle() {
-      this.vehicles.push(this.createVehicleFormGroup());
-    }
   
-    removeVehicle(index: number) {
-      this.vehicles.removeAt(index);
-    }
-
-  verifStartLocation(): boolean {
-    debounceTime(1000)
-    return this.basicInfoFormGroup.get('startLocation')!.value === '';
-  }
+ 
 
   
 
@@ -179,7 +150,7 @@ onSubmit() {
     endLocation: this.basicInfoFormGroup.value.endLocation,
     startDate: (this.basicInfoFormGroup.value.startDate as _moment.Moment).toDate(),
     endDate: (this.basicInfoFormGroup.value.endDate as _moment.Moment).toDate(),
-    vehicle: this.vehicles.value,
+    vehicle: this.vehicleInfoFormGroup.value.vehicles,
     availableSpace: this.additionalInfoFormGroup.value.availableSpace,
     maxWeight: this.additionalInfoFormGroup.value.maxWeight,
     pricePerParcel: this.additionalInfoFormGroup.value.pricePerParcel,
@@ -196,17 +167,86 @@ onSubmit() {
 
 }
 
+
+
+addVehicleType(type: string) {
+  const vehiclePerType: VehiclePerType = {
+    type: type,
+    quantity: 1, // Default quantity
+    vehicles: [{ make: '', model: '' }] // Start with one empty vehicle
+  };
+
+  this.vehiclePerTypeList.push(vehiclePerType);
+}
+
+removeVehicleType(type: string) {
+  this.vehiclePerTypeList = this.vehiclePerTypeList.filter(vehiclePerType => vehiclePerType.type !== type);
+}
+
 onVehicleTypeSelected(item: VehicleType) {
+  this.addVehicleType(item.title);
+  //vehicles.push(this.fb.array([]));
+  
   this.selectedVehicleType = item;
   this.listSelectedVehicleTypes.push(item);
   console.log('Selected Vehicle Type:', this.selectedVehicleType);
   console.log('List of Selected Vehicle Types:', this.listSelectedVehicleTypes);
   // Vous pouvez maintenant faire quelque chose avec l'élément sélectionné
+}
 
+setVehicleFormGroups(vehicleTypeFormGroup: FormGroup, quantity: number) {
+  const vehiclesFormArray = vehicleTypeFormGroup.get('vehicles') as FormArray;
+  vehiclesFormArray.clear();
+
+  for (let i = 0; i < quantity; i++) {
+    vehiclesFormArray.push(this.createVehicleFormGroup());
+  }
+}
+
+createVehiclePerTypeFormGroup(type: String): FormGroup {
+  return this.fb.group({
+    type: [type, Validators.required],
+    quantity: [1, Validators.required],
+    vehicles: this.fb.array([]),
+  });
+}
+
+createVehicleFormGroup(): FormGroup {
+  return this.fb.group({
+    make: [''],
+    model: [''],
+  });
 }
 
 onVehicleTypeUnselected(item: VehicleType) {
- this.listSelectedVehicleTypes = this.listSelectedVehicleTypes.filter(vehicleType => vehicleType.id !== item.id);
+  this.removeVehicleType(item.title);
+}
+
+onQuantityChange(index: number, event: MatSelectChange) {
+  const quantity = event.value as number;
+  const vehiclePerType = this.vehiclePerTypeList[index];
+  vehiclePerType.quantity = quantity;
+
+  // Adjust the number of vehicles in the list based on the quantity
+  const currentLength = vehiclePerType.vehicles.length;
+  if (quantity > currentLength) {
+    for (let i = currentLength; i < quantity; i++) {
+      vehiclePerType.vehicles.push({ make: '', model: '' });
+    }
+  } else {
+    vehiclePerType.vehicles.splice(quantity, currentLength - quantity);
+  }
+}
+
+getVehicleArray(index: number): FormArray {
+  return (this.vehicleInfoFormGroup.get('vehicles') as FormArray).at(index) as FormArray;
+}
+
+
+
+getVehicleControls(vehicleTypeGroup: AbstractControl): AbstractControl[] {
+  const vehiclesFormArray = vehicleTypeGroup.get('vehicles') as FormArray;
+  return vehiclesFormArray ? vehiclesFormArray.controls : [];
 }
 
 
