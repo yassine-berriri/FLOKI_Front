@@ -23,6 +23,7 @@ import { VehicleType } from '../../../shared/store/models/VehicleType';
 import { Vehicle } from '../../../shared/store/models/Vehicle';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { VehiclePerType } from '../../../shared/store/models/VehiclePerTyper';
+import { KindUnit } from '../../../shared/store/models/Paiement';
 
 
 @Component({
@@ -66,6 +67,7 @@ export class TransporterCreateShipComponent implements OnInit {
   listSelectedVehicleTypes: any[] = [];
   vehicleList: Vehicle[]= [];
   vehiclePerTypeList: VehiclePerType[] = [];
+  currencyUnits = KindUnit;
   
   selectedVehicleType: any;
   constructor(private fb: FormBuilder, private store: Store, private locationService: LocationService, private carService: CarService) {
@@ -139,9 +141,6 @@ export class TransporterCreateShipComponent implements OnInit {
 
 
   
- 
-
-  
 
 onSubmit() {
   const ship: Ship = {
@@ -150,7 +149,7 @@ onSubmit() {
     endLocation: this.basicInfoFormGroup.value.endLocation,
     startDate: (this.basicInfoFormGroup.value.startDate as _moment.Moment).toDate(),
     endDate: (this.basicInfoFormGroup.value.endDate as _moment.Moment).toDate(),
-    vehicle: this.vehicleInfoFormGroup.value.vehicles,
+    vehicle: this.vehiclePerTypeList,
     availableSpace: this.additionalInfoFormGroup.value.availableSpace,
     maxWeight: this.additionalInfoFormGroup.value.maxWeight,
     pricePerParcel: this.additionalInfoFormGroup.value.pricePerParcel,
@@ -173,7 +172,7 @@ addVehicleType(type: string) {
   const vehiclePerType: VehiclePerType = {
     type: type,
     quantity: 1, // Default quantity
-    vehicles: [{ make: '', model: '' }] // Start with one empty vehicle
+    vehicles: [{ make: '', model: '', maxWeight: 0, pricePerKilo: ({ price: 0, unit: KindUnit.euro}) }] // Start with one empty vehicle
   };
 
   this.vehiclePerTypeList.push(vehiclePerType);
@@ -215,6 +214,7 @@ createVehicleFormGroup(): FormGroup {
   return this.fb.group({
     make: [''],
     model: [''],
+
   });
 }
 
@@ -231,7 +231,7 @@ onQuantityChange(index: number, event: MatSelectChange) {
   const currentLength = vehiclePerType.vehicles.length;
   if (quantity > currentLength) {
     for (let i = currentLength; i < quantity; i++) {
-      vehiclePerType.vehicles.push({ make: '', model: '' });
+      vehiclePerType.vehicles.push({ make: '', model: '', maxWeight: 0, pricePerKilo: ({ price: 0, unit: KindUnit.euro}) });
     }
   } else {
     vehiclePerType.vehicles.splice(quantity, currentLength - quantity);

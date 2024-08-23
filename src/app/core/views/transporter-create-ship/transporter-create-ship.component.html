@@ -75,7 +75,13 @@
     <mat-step [stepControl]="vehicleInfoFormGroup">
       <!--<form [formGroup]="vehicleInfoFormGroup">-->
         <ng-template matStepLabel>Vehicle Information</ng-template>
-        <div class="c" >
+        <div class="vehicles">
+      
+    <div class="vehicleType">
+        <app-vehicle-type-list (itemSelected)="onVehicleTypeSelected($event)"  (itemUnselected)="onVehicleTypeUnselected($event)"></app-vehicle-type-list>
+      </div>
+
+      <div class="vehicleInfo" >
         <ul  *ngFor="let item of vehiclePerTypeList; let i = index">
 
         <p>Please provide details about your {{item.type }}</p>
@@ -89,7 +95,7 @@
           </mat-select>       
          </mat-form-field>
 
-        <div  >
+        <div>
           <div *ngFor="let vehicle of item.vehicles; let j = index" >
             <!--
             <mat-form-field>
@@ -107,6 +113,9 @@
               </mat-autocomplete>
             </mat-form-field>
             -->
+            <div *ngIf="item.vehicles.length > 1" >
+              <p>{{item.type}} {{item.vehicles.length}}</p>
+            </div>
             <mat-form-field>
               <mat-label>Make</mat-label>
               <input matInput  [(ngModel)]="vehicle.make" placeholder="Enter vehicle model">
@@ -115,13 +124,31 @@
               <mat-label>Model</mat-label>
               <input matInput  [(ngModel)]="vehicle.model" placeholder="Enter vehicle model">
             </mat-form-field>
+            <mat-form-field>
+              <mat-label>Max Weight</mat-label>
+              <input matInput [(ngModel)]="vehicle.maxWeight" type="number" placeholder="Enter max weight" required>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Price per Kilo</mat-label>
+              <input matInput [(ngModel)]="vehicle.pricePerKilo.price" type="number" placeholder="Enter price per Kilo" required>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Unit </mat-label>
+              <mat-select [(ngModel)]="vehicle.pricePerKilo.unit" (selectionChange)="onQuantityChange(i, $event)">
+                <mat-option  *ngFor="let unit of currencyUnits | keyvalue" [value]="unit.value">
+                  {{ unit.value }}
+                </mat-option>
+              </mat-select>       
+             </mat-form-field>
+            
           </div>
         </div>
 
       </ul>
     </div>
-        <app-vehicle-type-list (itemSelected)="onVehicleTypeSelected($event)"  (itemUnselected)="onVehicleTypeUnselected($event)"></app-vehicle-type-list>
 
+    </div>
         <div>
           <button mat-button matStepperPrevious>Back</button>
           <button mat-button matStepperNext>Next</button>

@@ -1,7 +1,5 @@
-export interface Vehicle {
-    make: string;
-    model: string;
-  }
+import { Vehicle } from "./Vehicle";
+
   
   export interface VehiclePerType {
     type: string;
