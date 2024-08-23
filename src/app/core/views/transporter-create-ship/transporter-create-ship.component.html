@@ -76,17 +76,24 @@
       <form [formGroup]="vehicleInfoFormGroup">
         <ng-template matStepLabel>Vehicle Information</ng-template>
 
-        <ul *ngFor="let item of listSelectedVehicleTypes">
+        <ul *ngFor="let item of listSelectedVehicleTypes; let i = index">
 
         <p>Please provide details about your {{item.title}}</p>
 
-        <mat-form-field>
-          <mat-label>How many {{item.title}} do you have? </mat-label>
-          <input matInput formControlName="quantity" type="number" placeholder="Enter the number of vehicles" required>
-        </mat-form-field>
-
-        <div formArrayName="vehicles">
-          <div *ngFor="let vehicle of vehicles.controls; let i = index" [formGroupName]="i">
+        <div formArrayName="quantities">
+          <div [formGroupName]="i">
+            <mat-form-field>
+              <mat-label>How many {{item.title}} do you have?</mat-label>
+              <mat-select formControlName="quantity" (selectionChange)="onQuantityChange(i, $event)">
+                <mat-option *ngFor="let value of [1, 2, 3, 4, 5]" [value]="value">
+                  {{ value }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div formArrayName="vehicles" *ngIf="getVehicleArray(i)">
+          <div  *ngFor="let vehicle of getVehicleArray(i).controls; let j = index" [formGroupName]="j">
             <!--
             <mat-form-field>
               <mat-label>Make</mat-label>

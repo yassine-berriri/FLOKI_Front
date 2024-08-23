@@ -21,6 +21,7 @@ import { CarService } from '../../../shared/services/car.service';
 import { VehicleTypeListComponent } from '../../../shared/components/lists/vehicle-type-list/vehicle-type-list.component';
 import { VehicleType } from '../../../shared/store/models/VehicleType';
 import { Vehicle } from '../../../shared/store/models/Vehicle';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 
 
 @Component({
@@ -38,7 +39,8 @@ import { Vehicle } from '../../../shared/store/models/Vehicle';
     MatAutocompleteModule,
     SharedModule,
     LocationAutoCompleteInputComponent,
-    VehicleTypeListComponent
+    VehicleTypeListComponent,
+    MatSelectModule
     
   ],
     providers: [
@@ -62,7 +64,6 @@ export class TransporterCreateShipComponent implements OnInit {
 
   listSelectedVehicleTypes: any[] = [];
   vehicleList: Vehicle[]= [];
-  quantity: number = 1;
   
   selectedVehicleType: any;
   constructor(private fb: FormBuilder, private store: Store, private locationService: LocationService, private carService: CarService) {
@@ -83,7 +84,7 @@ export class TransporterCreateShipComponent implements OnInit {
 
 
     this.vehicleInfoFormGroup = this.fb.group({
-      quantity: [1, Validators.required],
+      quantities: this.fb.array([]),
       vehicles: this.fb.array([]) // Start with an empty FormArray
     });
  
@@ -96,11 +97,20 @@ export class TransporterCreateShipComponent implements OnInit {
     });
     
 
-    this.vehicleInfoFormGroup.get('quantity')!.valueChanges.subscribe(quantity => {
-      this.setVehicleFormGroups(quantity);
+    // Abonnez-vous aux changements de chaque quantity dans le FormArray quantities
+    const quantitiesArray = this.vehicleInfoFormGroup.get('quantities') as FormArray;
+    quantitiesArray.controls.forEach((control, index) => {
+      control.get('quantity')?.valueChanges.subscribe(quantity => {
+        this.setVehicleFormGroups(quantity);
+      });
     });
 
-    this.setVehicleFormGroups(this.vehicleInfoFormGroup.get('quantity')!.value);
+    // Déclenchez manuellement la mise à jour si nécessaire
+    quantitiesArray.controls.forEach((control, index) => {
+      this.setVehicleFormGroups(control.get('quantity')!.value);
+    });
+
+    //this.setVehicleFormGroups(this.vehicleInfoFormGroup.get('quantity')!.value);
 
 
   
@@ -197,6 +207,23 @@ onSubmit() {
 }
 
 onVehicleTypeSelected(item: VehicleType) {
+
+  const quantities = this.vehicleInfoFormGroup.get('quantities') as FormArray;
+  const vehicles = this.vehicleInfoFormGroup.get('vehicles') as FormArray;
+
+  quantities.push(this.fb.group({
+    type: item.title,
+    quantity: [1, Validators.required]
+  }));
+
+  quantities.controls.forEach((control, index) => {
+    control.get('quantity')?.valueChanges.subscribe(quantity => {
+      this.setVehicleFormGroups(quantity);
+    });
+  });
+
+  //vehicles.push(this.fb.array([]));
+
   this.selectedVehicleType = item;
   this.listSelectedVehicleTypes.push(item);
   console.log('Selected Vehicle Type:', this.selectedVehicleType);
@@ -207,6 +234,35 @@ onVehicleTypeSelected(item: VehicleType) {
 
 onVehicleTypeUnselected(item: VehicleType) {
  this.listSelectedVehicleTypes = this.listSelectedVehicleTypes.filter(vehicleType => vehicleType.id !== item.id);
+
+  const quantities = this.vehicleInfoFormGroup.get('quantities') as FormArray;
+  const vehicles = this.vehicleInfoFormGroup.get('vehicles') as FormArray;
+
+  const index = quantities.controls.findIndex(control => control.get('type')!.value === item.title);
+  quantities.removeAt(index);
+  vehicles.removeAt(index);
+  console.log('List of Selected Vehicle Types:', this.listSelectedVehicleTypes);
+  // Vous pouvez maintenant faire quelque chose avec l'élément désélectionné
+}
+
+onQuantityChange(index: number, event: MatSelectChange) {
+  const quantity = event.value as number;
+ 
+  
+  const vehicles = this.vehicleInfoFormGroup.get('vehicles') as FormArray;
+  const vehicleArray = vehicles.at(index) as FormArray;
+
+  while (vehicleArray.length < quantity) {
+    vehicleArray.push(this.createVehicleFormGroup());
+  }
+
+  while (vehicleArray.length > quantity) {
+    vehicleArray.removeAt(vehicleArray.length - 1);
+  }
+}
+
+getVehicleArray(index: number): FormArray {
+  return (this.vehicleInfoFormGroup.get('vehicles') as FormArray).at(index) as FormArray;
 }
 
 
