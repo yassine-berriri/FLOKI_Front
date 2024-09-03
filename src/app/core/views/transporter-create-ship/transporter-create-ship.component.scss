@@ -43,3 +43,11 @@
    
     width: 100%;
   }
+
+  .action_phoneInputs{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 1%;
+    margin-bottom: 1%;
+  }

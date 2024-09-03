@@ -94,10 +94,7 @@ export class TransporterCreateShipComponent implements OnInit {
  
 
     this.additionalInfoFormGroup = this.fb.group({
-      availableSpace: [0, Validators.required],
-      maxWeight: [0, Validators.required],
-      pricePerParcel: [0, Validators.required],
-      phoneNumber: ['', Validators.required],
+      phoneNumbers:  this.fb.array([this.createPhoneNumberField()]),
     });
     
 
@@ -122,6 +119,24 @@ export class TransporterCreateShipComponent implements OnInit {
 
   }
 
+  get phoneNumbers(): FormArray {
+    return this.additionalInfoFormGroup.get('phoneNumbers') as FormArray;
+  }
+
+  createPhoneNumberField(): FormGroup {
+    return this.fb.group({
+      phoneNumber: ['']
+    });
+  }
+
+  addInputPhone() {
+    this.phoneNumbers.push(this.createPhoneNumberField());
+  }
+
+  removeInputPhone(index: number) {
+    this.phoneNumbers.removeAt(index);
+  }
+
   subscribeToMakeValueChanges() {
     const vehiclesArray = this.vehicleInfoFormGroup.get('vehicles') as FormArray;
   
@@ -143,6 +158,9 @@ export class TransporterCreateShipComponent implements OnInit {
   
 
 onSubmit() {
+  console.log("vehiclePerTypeList", this.vehiclePerTypeList);
+  const phoneNumbers: string[] = this.phoneNumbers.controls.map(control => control.value.phoneNumber.trim());
+
   const ship: Ship = {
     id: new Date().getTime(), 
     startLocation: this.basicInfoFormGroup.value.startLocation,
@@ -150,10 +168,7 @@ onSubmit() {
     startDate: (this.basicInfoFormGroup.value.startDate as _moment.Moment).toDate(),
     endDate: (this.basicInfoFormGroup.value.endDate as _moment.Moment).toDate(),
     vehicle: this.vehiclePerTypeList,
-    availableSpace: this.additionalInfoFormGroup.value.availableSpace,
-    maxWeight: this.additionalInfoFormGroup.value.maxWeight,
-    pricePerParcel: this.additionalInfoFormGroup.value.pricePerParcel,
-    phoneNumber: this.additionalInfoFormGroup.value.phoneNumber.split(',').map((num: string) => num.trim())
+    phoneNumber: phoneNumbers
   };
   console.log("ship", ship);
   this.store.dispatch(ShipActions.addShip({ ship }));
@@ -188,7 +203,6 @@ onVehicleTypeSelected(item: VehicleType) {
   
   this.selectedVehicleType = item;
   this.listSelectedVehicleTypes.push(item);
-  console.log('Selected Vehicle Type:', this.selectedVehicleType);
   console.log('List of Selected Vehicle Types:', this.listSelectedVehicleTypes);
   // Vous pouvez maintenant faire quelque chose avec l'élément sélectionné
 }
@@ -196,6 +210,8 @@ onVehicleTypeSelected(item: VehicleType) {
 setVehicleFormGroups(vehicleTypeFormGroup: FormGroup, quantity: number) {
   const vehiclesFormArray = vehicleTypeFormGroup.get('vehicles') as FormArray;
   vehiclesFormArray.clear();
+
+  console.log("vehiclesFormArray", vehiclesFormArray);
 
   for (let i = 0; i < quantity; i++) {
     vehiclesFormArray.push(this.createVehicleFormGroup());
@@ -214,7 +230,6 @@ createVehicleFormGroup(): FormGroup {
   return this.fb.group({
     make: [''],
     model: [''],
-
   });
 }
 

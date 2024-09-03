@@ -8,8 +8,5 @@ export interface Ship {
     startDate: Date;          // Date de départ
     endDate: Date;            // Date d'arrivée
     vehicle: VehiclePerType[];         // Informations sur le véhicule
-    availableSpace: number;   // Espace disponible (calculé)
     phoneNumber: string[];      // Numéro de téléphone du transporteur
-    maxWeight: number;        // Poids maximum en kilos
-    pricePerParcel: number;   // Prix par colis
   }

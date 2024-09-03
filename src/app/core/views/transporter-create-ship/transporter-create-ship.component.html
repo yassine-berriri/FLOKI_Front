@@ -159,27 +159,31 @@
     <!-- Step 3: Additional Information -->
     <mat-step [stepControl]="additionalInfoFormGroup">
       <form [formGroup]="additionalInfoFormGroup">
+        <div formArrayName="phoneNumbers">
         <ng-template matStepLabel>Additional Information</ng-template>
+        <div *ngFor="let phoneControl of phoneNumbers.controls; let i = index" [formGroupName]="i">
+          <div class="action_phoneInputs">
+
         <mat-form-field>
-          <mat-label>Available Space</mat-label>
-          <input matInput formControlName="availableSpace" type="number" placeholder="Enter available space" required>
+          <mat-label>Phone Numbers {{i + 1}}</mat-label>
+          <input matInput formControlName="phoneNumber" placeholder="Enter phone numbers (comma separated)" >
         </mat-form-field>
-        <mat-form-field>
-          <mat-label>Max Weight</mat-label>
-          <input matInput formControlName="maxWeight" type="number" placeholder="Enter max weight" required>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Price per Parcel</mat-label>
-          <input matInput formControlName="pricePerParcel" type="number" placeholder="Enter price per parcel" required>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Phone Numbers</mat-label>
-          <input matInput formControlName="phoneNumber" placeholder="Enter phone numbers (comma separated)" required>
-        </mat-form-field>
+        
+        <button (click)="addInputPhone()" mat-fab aria-label="Example icon button with a delete icon">
+          <mat-icon>add</mat-icon>
+        </button>
+        <div *ngIf="phoneNumbers.controls.length > 1">
+          <button (click)="removeInputPhone(i)" mat-fab aria-label="Example icon button with a delete icon">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+      </div>
         <div>
           <button mat-button matStepperPrevious>Back</button>
           <button mat-button matStepperNext>Next</button>
         </div>
+      </div>
       </form>
     </mat-step>
     
@@ -212,10 +216,12 @@
     
           <div class="columnInfo">
             <h3>Additional Information</h3>
+            <!--
             <p><strong>Available Space:</strong> {{ additionalInfoFormGroup.get('availableSpace')!.value }} m³</p>
             <p><strong>Max Weight:</strong> {{ additionalInfoFormGroup.get('maxWeight')!.value }} kg</p>
             <p><strong>Price per Parcel:</strong> {{ additionalInfoFormGroup.get('pricePerParcel')!.value }} $</p>
-            <p><strong>Phone Numbers:</strong> {{ additionalInfoFormGroup.get('phoneNumber')!.value }}</p>
+            -->
+            <p><strong>Phone Numbers:</strong> {{ additionalInfoFormGroup.get('phoneNumbers')!.value }}</p>
           </div>
         </div>
         <div>
